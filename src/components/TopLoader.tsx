@@ -1,21 +1,29 @@
 /**
  * TopLoader.tsx — Progress bar hiển thị khi chuyển trang.
  *
- * Dùng @bprogress/next thay vì nprogress vì:
- * - TypeScript native, active maintenance (nprogress 5 năm không update)
- * - Tích hợp sẵn với Next.js App Router (auto detect navigation)
- * - Không cần CSS import riêng
+ * Dùng ProgressProvider từ @bprogress/next/app (App Router) thay vì
+ * Progress từ @bprogress/next (generic) vì:
+ * - Auto detect route changes trong App Router
+ * - Hỗ trợ props: color, height, options, shallowRouting
+ * - Cần wrap children để tracking navigation context
  *
  * Màu sắc match theme Bizflow (#7c3aed = brand-600).
+ * Chiều cao 4px, không spinner (giữ tối giản).
+ * shallowRouting: bắt cả các navigation không làm thay đổi URL (search params).
  */
 'use client'
 
-import { Progress } from '@bprogress/next'
+import { ProgressProvider } from '@bprogress/next/app'
 
-export default function TopLoader() {
+export default function TopLoader({ children }: { children: React.ReactNode }) {
   return (
-    <Progress
+    <ProgressProvider
       color="#7c3aed"
-    />
+      height="4px"
+      options={{ showSpinner: false }}
+      shallowRouting
+    >
+      {children}
+    </ProgressProvider>
   )
 }

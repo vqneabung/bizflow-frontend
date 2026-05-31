@@ -49,9 +49,10 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen bg-white antialiased">
-        <TopLoader />
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <TopLoader>
+            {children}
+          </TopLoader>
         </NextIntlClientProvider>
       </body>
     </html>
