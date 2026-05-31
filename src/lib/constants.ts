@@ -43,12 +43,12 @@ export const mockStats: DashboardStat[] = [
   { label: 'Sản phẩm tồn kho', value: '1,243', trend: 'neutral', change: '0%', icon: '📊' },
 ]
 
-/** Dashboard navigation items */
+/** Dashboard navigation items — label lấy từ translations (namespace 'nav') */
 export const navItems = [
-  { label: 'Tổng quan', href: '/dashboard', icon: '📊' },
-  { label: 'Hồ sơ', href: '/dashboard/profile', icon: '👤' },
-  { label: 'Sản phẩm', href: '#', icon: '📦' },
-  { label: 'Khách hàng', href: '#', icon: '👥' },
-  { label: 'Đơn hàng', href: '#', icon: '🛒' },
-  { label: 'Báo cáo', href: '#', icon: '📈' },
+  { key: 'home', href: '/dashboard', icon: '📊' },
+  { key: 'profile', href: '/dashboard/profile', icon: '👤' },
+  { key: 'products', href: '#', icon: '📦' },
+  { key: 'customers', href: '#', icon: '👥' },
+  { key: 'orders', href: '#', icon: '🛒' },
+  { key: 'reports', href: '#', icon: '📈' },
 ] as const

@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     const tokenParams = new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: `${APP_URL}/api/auth/callback`,
+      redirect_uri: `${APP_URL}/api/auth/callback/oidc`,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       code_verifier: codeVerifier, // PKCE

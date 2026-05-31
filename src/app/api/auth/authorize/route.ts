@@ -36,7 +36,7 @@ export async function GET() {
   const authorizeUrl = new URL(`${AUTH_ISSUER}/oauth2/authorize`)
   authorizeUrl.searchParams.set('response_type', 'code')
   authorizeUrl.searchParams.set('client_id', CLIENT_ID)
-  authorizeUrl.searchParams.set('redirect_uri', `${APP_URL}/api/auth/callback`)
+  authorizeUrl.searchParams.set('redirect_uri', `${APP_URL}/api/auth/callback/oidc`)
   authorizeUrl.searchParams.set('scope', 'openid email profile')
   authorizeUrl.searchParams.set('code_challenge', codeChallenge)
   authorizeUrl.searchParams.set('code_challenge_method', 'S256')

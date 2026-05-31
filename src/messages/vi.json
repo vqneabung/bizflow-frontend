@@ -1,0 +1,178 @@
+{
+  "common": {
+    "siteName": "Bizflow",
+    "siteDescription": "Nền tảng hỗ trợ chuyển đổi số cho hộ kinh doanh",
+    "nav": {
+      "home": "Trang chủ",
+      "about": "Giới thiệu",
+      "contact": "Liên hệ"
+    },
+    "auth": {
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "loginNow": "Đăng nhập ngay",
+      "registerNow": "Đăng ký ngay",
+      "logout": "Đăng xuất",
+      "alreadyHaveAccount": "Đã có tài khoản?",
+      "noAccount": "Chưa có tài khoản?"
+    },
+    "footer": {
+      "description": "Quản lý bán hàng, kho, công nợ dễ dàng hơn bao giờ hết.",
+      "quickLinks": "Liên kết",
+      "contactInfo": "Liên hệ",
+      "email": "contact@bizflow.vn",
+      "phone": "1900 1234",
+      "address": "TP. Hồ Chí Minh",
+      "copyright": "All rights reserved."
+    },
+    "role": {
+      "owner": "Chủ cửa hàng",
+      "employee": "Nhân viên",
+      "admin": "Quản trị viên"
+    },
+    "theme": {
+      "vi": "Tiếng Việt",
+      "en": "English"
+    }
+  },
+
+  "home": {
+    "hero": {
+      "title": "Chuyển đổi số cho",
+      "highlight": "hộ kinh doanh",
+      "subtitle": "Quản lý bán hàng, kho hàng, công nợ và báo cáo tài chính — tất cả trong một nền tảng. Đơn giản, thông minh, dành riêng cho hộ kinh doanh Việt Nam.",
+      "cta": "Bắt đầu miễn phí",
+      "learnMore": "Tìm hiểu thêm"
+    },
+    "features": {
+      "title": "Tại sao chọn Bizflow?",
+      "subtitle": "Được thiết kế dành riêng cho hộ kinh doanh truyền thống — không rườm rà, không thiết bị đắt tiền.",
+      "items": [
+        { "icon": "📦", "title": "Quản lý bán hàng", "desc": "Tạo đơn hàng nhanh chóng, tìm kiếm sản phẩm tức thì, hỗ trợ bán tại quầy và đặt hàng qua điện thoại." },
+        { "icon": "📊", "title": "Quản lý kho", "desc": "Theo dõi tồn kho real-time, tự động trừ khi bán hàng, cảnh báo hàng sắp hết." },
+        { "icon": "📋", "title": "Quản lý công nợ", "desc": "Ghi nhận công nợ tự động khi bán chịu, theo dõi lịch sử thanh toán của từng khách hàng." },
+        { "icon": "🤖", "title": "AI hỗ trợ", "desc": "Trợ lý AI hiểu giọng nói tự nhiên, tự động tạo đơn nháp và đề xuất thông minh." }
+      ]
+    },
+    "steps": {
+      "title": "Bắt đầu chỉ với 3 bước",
+      "subtitle": "Không cần cài đặt phức tạp. Không cần thiết bị đắt tiền. Chỉ cần một chiếc điện thoại.",
+      "items": [
+        { "step": "1", "title": "Đăng ký tài khoản", "desc": "Tạo tài khoản miễn phí trong 2 phút. Không cần thẻ tín dụng." },
+        { "step": "2", "title": "Thiết lập cửa hàng", "desc": "Nhập sản phẩm, giá, tồn kho. Dễ dàng như Excel." },
+        { "step": "3", "title": "Bắt đầu bán hàng", "desc": "Tạo đơn, theo dõi doanh thu, quản lý công nợ ngay lập tức." }
+      ]
+    },
+    "cta": {
+      "title": "Sẵn sàng chuyển đổi số?",
+      "subtitle": "Hàng ngàn hộ kinh doanh đã tin dùng. Tham gia cùng chúng tôi ngay hôm nay.",
+      "button": "Đăng ký miễn phí"
+    }
+  },
+
+  "about": {
+    "title": "Về Bizflow",
+    "mission": "Bizflow là nền tảng chuyển đổi số được thiết kế dành riêng cho hộ kinh doanh truyền thống tại Việt Nam — đặc biệt là các cửa hàng vật liệu xây dựng, tạp hóa, và các ngành hàng nhóm 1, nhóm 2 theo Quyết định 3389/QĐ-BTC (2025).",
+    "challenge": "Theo khảo sát, phần lớn hộ kinh doanh vẫn vận hành hoàn toàn thủ công — ghi chép sổ tay, quản lý bằng Excel. Họ thiếu thiết bị (máy tính, máy in hóa đơn, máy quét mã vạch) và ngân sách để thuê kế toán. Bizflow ra đời để giải quyết vấn đề đó.",
+    "solution": "Giải pháp của chúng tôi",
+    "solutions": [
+      { "title": "Bán hàng đa kênh", "desc": "Hỗ trợ bán tại quầy, đặt hàng qua điện thoại/Zalo, và đơn hàng từ AI." },
+      { "title": "Quản lý công nợ", "desc": "Tự động ghi nhận công nợ, theo dõi lịch sử giao dịch dài hạn." },
+      { "title": "Báo cáo tài chính", "desc": "Tự động lập báo cáo theo Thông tư 88/2021/TT-BTC, sẵn sàng cho thuế." },
+      { "title": "AI thông minh", "desc": "Trợ lý AI hiểu ngôn ngữ tự nhiên, tự động tạo đơn nháp từ giọng nói hoặc văn bản." }
+    ],
+    "techStack": "Công nghệ sử dụng"
+  },
+
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Bạn có câu hỏi? Chúng tôi luôn sẵn sàng hỗ trợ.",
+    "formTitle": "Gửi tin nhắn cho chúng tôi",
+    "form": {
+      "name": "Họ và tên",
+      "email": "Email",
+      "message": "Nội dung",
+      "submit": "Gửi tin nhắn",
+      "note": "* Form liên hệ sẽ được kết nối API trong phiên bản tiếp theo."
+    },
+    "info": {
+      "email": "Email",
+      "phone": "Điện thoại",
+      "address": "Địa chỉ",
+      "hours": "Giờ làm việc",
+      "hoursValue": "Thứ 2 - Thứ 7, 8:00 - 17:30"
+    }
+  },
+
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "subtitle": "Chào mừng bạn trở lại với Bizflow",
+      "email": "Email",
+      "password": "Mật khẩu",
+      "submit": "Đăng nhập",
+      "loading": "Đang đăng nhập..."
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "subtitle": "Bắt đầu sử dụng Bizflow miễn phí",
+      "email": "Email",
+      "name": "Tên hiển thị",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "submit": "Tạo tài khoản",
+      "loading": "Đang tạo tài khoản...",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp",
+      "duplicateEmail": "Email đã tồn tại"
+    },
+    "errors": {
+      "loginFailed": "Đăng nhập thất bại",
+      "registerFailed": "Đăng ký thất bại"
+    }
+  },
+
+  "dashboard": {
+    "title": "Tổng quan",
+    "stats": {
+      "revenue": "Doanh thu hôm nay",
+      "orders": "Đơn hàng hôm nay",
+      "debt": "Công nợ khách hàng",
+      "inventory": "Sản phẩm tồn kho",
+      "comparedToYesterday": "so với hôm qua"
+    },
+    "chart": {
+      "title": "Biểu đồ doanh thu",
+      "description": "Biểu đồ sẽ hiển thị tại đây sau khi kết nối API.",
+      "placeholder": "📈 Biểu đồ doanh thu 7 ngày gần nhất"
+    },
+    "version": "Bizflow v0.1.0"
+  },
+
+  "profile": {
+    "title": "Hồ sơ",
+    "accountInfo": "Thông tin tài khoản",
+    "settings": "Cài đặt tài khoản",
+    "fields": {
+      "phone": "Số điện thoại",
+      "store": "Cửa hàng",
+      "joinedDate": "Ngày tham gia"
+    },
+    "notifications": {
+      "email": "Thông báo qua email",
+      "emailDesc": "Nhận thông báo đơn hàng mới qua email",
+      "sms": "Thông báo qua SMS",
+      "smsDesc": "Nhận thông báo công nợ qua SMS"
+    },
+    "note": "* Các tính năng chỉnh sửa thông tin và đổi mật khẩu sẽ được phát triển sau."
+  },
+
+  "nav": {
+    "home": "Tổng quan",
+    "profile": "Hồ sơ",
+    "products": "Sản phẩm",
+    "customers": "Khách hàng",
+    "orders": "Đơn hàng",
+    "reports": "Báo cáo"
+  }
+}

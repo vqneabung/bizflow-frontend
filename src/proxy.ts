@@ -1,40 +1,48 @@
 /**
- * proxy.ts — Bảo vệ routes dashboard, kiểm tra session.
+ * proxy.ts — Merge next-intl locale detection + auth session check.
  *
- * Next.js 16: middleware.ts → proxy.ts (renamed)
+ * Next.js 16: middleware.ts → proxy.ts
+ * Chạy trước mỗi request để:
+ * 1. Phát hiện locale (từ cookie/header/URL) → redirect nếu cần
+ * 2. Kiểm tra session cho dashboard routes → redirect /login nếu chưa auth
  *
- * Flow:
- * - /dashboard/* → kiểm tra cookie session_token → nếu không có → redirect /login
- * - /login, /register → nếu có cookie → redirect /dashboard
- * - Các routes khác (/, /about, /contact, _next/*) → pass through
- *
- * Internal paths bỏ qua:
- * - /_next/* — static files của Next.js
- * - /api/auth/* — API routes auth (callback, register)
- * - /favicon.ico — icon
+ * Thứ tự quan trọng: locale detection chạy TRƯỚC auth check
+ * để URL luôn có locale prefix (/vi/dashboard thay vì /dashboard).
  */
+import createMiddleware from 'next-intl/middleware'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { routing } from './i18n/routing'
 
-/** Các routes không cần auth — public */
-const publicRoutes = ['/', '/about', '/contact', '/login', '/register']
+// next-intl middleware — locale detection + redirect
+const intlMiddleware = createMiddleware(routing)
 
-/** Các internal paths bỏ qua proxy (không kiểm tra session) */
-const ignoredPaths = ['/_next/', '/favicon.ico', '/api/auth/']
+/** Internal paths bỏ qua proxy */
+const ignoredPaths = ['/_next/', '/favicon.ico', '/api/']
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const sessionToken = request.cookies.get('session_token')?.value
 
-  // Bỏ qua internal paths (static files, API auth routes)
+  // Bỏ qua internal paths (static files, API routes)
   if (ignoredPaths.some((path) => pathname.startsWith(path))) {
     return
   }
 
-  // Dashboard routes — yêu cầu session
-  if (pathname.startsWith('/dashboard')) {
+  // Bước 1: next-intl locale detection
+  // Nếu URL chưa có locale prefix → thêm vào (ví dụ /vi/dashboard)
+  const intlResponse = intlMiddleware(request)
+  if (intlResponse) {
+    return intlResponse
+  }
+
+  // Bước 2: Auth check — dashboard yêu cầu session_token
+  const sessionToken = request.cookies.get('session_token')?.value
+  const locale = pathname.split('/')[1] // 'vi' hoặc 'en'
+
+  if (pathname.startsWith(`/${locale}/dashboard`) || pathname === `/${locale}/dashboard`) {
     if (!sessionToken) {
-      const loginUrl = new URL('/login', request.url)
+      // Redirect đến login page có locale
+      const loginUrl = new URL(`/${locale}/login`, request.url)
       loginUrl.searchParams.set('redirect', pathname)
       return NextResponse.redirect(loginUrl)
     }
@@ -42,8 +50,9 @@ export function proxy(request: NextRequest) {
   }
 
   // Login/Register — nếu đã có session → redirect vào dashboard
-  if ((pathname === '/login' || pathname === '/register') && sessionToken) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  const isLoginPage = pathname === `/${locale}/login` || pathname === `/${locale}/register`
+  if (isLoginPage && sessionToken) {
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url))
   }
 
   // Public routes — pass through
@@ -52,7 +61,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip _next static files
-    '/((?!_next/|favicon\\.ico).*)',
+    // Skip _next static files + API routes
+    '/((?!_next/|api/|favicon\\.ico).*)',
   ],
 }
