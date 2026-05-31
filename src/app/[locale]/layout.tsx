@@ -10,7 +10,12 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations } from 'next-intl/server'
 import { Geist, Geist_Mono } from 'next/font/google'
 import type { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import '../globals.css'
+
+// Progress bar — dynamic import vì là client component
+// Hiển thị trong lúc chuyển trang (giảm user click nhiều lần)
+const TopLoader = dynamic(() => import('@/components/TopLoader'))
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -44,6 +49,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen bg-white antialiased">
+        <TopLoader />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
