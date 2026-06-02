@@ -47,7 +47,7 @@ export const mockStats: DashboardStat[] = [
 export const navItems = [
   { key: 'home', href: '/dashboard', icon: '📊' },
   { key: 'profile', href: '/dashboard/profile', icon: '👤' },
-  { key: 'products', href: '#', icon: '📦' },
+  { key: 'products', href: '/dashboard/products', icon: '📦' },
   { key: 'customers', href: '#', icon: '👥' },
   { key: 'orders', href: '#', icon: '🛒' },
   { key: 'reports', href: '#', icon: '📈' },

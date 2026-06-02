@@ -167,6 +167,98 @@
     "note": "* Profile editing and password change features will be developed later."
   },
 
+  "products": {
+    "title": "Products",
+    "subtitle": "Manage your store's products",
+    "create": "Add Product",
+    "edit": "Edit Product",
+    "detail": "Product Details",
+    "search": "Search products...",
+    "filterByCategory": "Filter by category",
+    "allCategories": "All Categories",
+
+    "fields": {
+      "name": "Product Name",
+      "namePlaceholder": "e.g. Ha Tien PCB40 Cement",
+      "category": "Category",
+      "categoryPlaceholder": "e.g. Building Materials",
+      "primaryUnit": "Unit",
+      "primaryUnitPlaceholder": "e.g. Bag, Kg, Box",
+      "price": "Selling Price",
+      "pricePlaceholder": "85,000",
+      "costPrice": "Cost Price",
+      "costPricePlaceholder": "70,000",
+      "stock": "Stock",
+      "minStock": "Min Stock",
+      "imageUrl": "Image URL",
+      "imageUrlPlaceholder": "https://example.com/image.jpg",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "8934567890123",
+      "isActive": "Active"
+    },
+
+    "table": {
+      "name": "Product Name",
+      "category": "Category",
+      "price": "Price",
+      "stock": "Stock",
+      "actions": "Actions",
+      "showing": "Showing {from}-{to} / {total}",
+      "prev": "Previous",
+      "next": "Next",
+      "empty": "No products yet",
+      "emptyAction": "Add your first product"
+    },
+
+    "badge": {
+      "lowStock": "Low Stock",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "deactivate": "Deactivate",
+      "cancel": "Cancel",
+      "save": "Save",
+      "creating": "Creating...",
+      "saving": "Saving..."
+    },
+
+    "confirm": {
+      "deactivateTitle": "Deactivate product?",
+      "deactivateMessage": "Product \"{name}\" will be hidden from sales. You can still view it later.",
+      "deactivateConfirm": "Confirm",
+      "cancel": "Keep"
+    },
+
+    "toast": {
+      "created": "Created product {name}",
+      "updated": "Updated product {name}",
+      "deactivated": "Deactivated product {name}",
+      "error": "Something went wrong",
+      "conflict": "This product was modified by someone else. Please refresh."
+    },
+
+    "errors": {
+      "loadFailed": "Failed to load products",
+      "loadFailedAction": "Retry",
+      "notFound": "Product not found",
+      "networkError": "Cannot connect to server",
+      "nameRequired": "Product name is required",
+      "unitRequired": "Unit is required",
+      "pricePositive": "Price must be greater than 0",
+      "stockNonNegative": "Stock cannot be negative",
+      "minStockNonNegative": "Min stock cannot be negative"
+    },
+
+    "unsaved": {
+      "title": "You have unsaved changes",
+      "message": "Your entered data will be lost if you leave this page."
+    }
+  },
+
   "nav": {
     "home": "Dashboard",
     "profile": "Profile",

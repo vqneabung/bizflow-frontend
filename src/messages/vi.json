@@ -167,6 +167,98 @@
     "note": "* Các tính năng chỉnh sửa thông tin và đổi mật khẩu sẽ được phát triển sau."
   },
 
+  "products": {
+    "title": "Sản phẩm",
+    "subtitle": "Quản lý danh mục sản phẩm của cửa hàng",
+    "create": "Thêm sản phẩm",
+    "edit": "Sửa sản phẩm",
+    "detail": "Chi tiết sản phẩm",
+    "search": "Tìm kiếm sản phẩm...",
+    "filterByCategory": "Lọc danh mục",
+    "allCategories": "Tất cả danh mục",
+
+    "fields": {
+      "name": "Tên sản phẩm",
+      "namePlaceholder": "VD: Xi măng Hà Tiên PCB40",
+      "category": "Danh mục",
+      "categoryPlaceholder": "VD: VLXD, Tạp hóa...",
+      "primaryUnit": "Đơn vị tính",
+      "primaryUnitPlaceholder": "VD: Bao, Kg, Thùng...",
+      "price": "Giá bán",
+      "pricePlaceholder": "85,000",
+      "costPrice": "Giá vốn",
+      "costPricePlaceholder": "70,000",
+      "stock": "Tồn kho",
+      "minStock": "Tồn tối thiểu",
+      "imageUrl": "URL hình ảnh",
+      "imageUrlPlaceholder": "https://example.com/hinh-anh.jpg",
+      "barcode": "Mã vạch",
+      "barcodePlaceholder": "8934567890123",
+      "isActive": "Đang bán"
+    },
+
+    "table": {
+      "name": "Tên sản phẩm",
+      "category": "Danh mục",
+      "price": "Giá bán",
+      "stock": "Tồn kho",
+      "actions": "Thao tác",
+      "showing": "Hiển thị {from}-{to} / {total}",
+      "prev": "Trước",
+      "next": "Sau",
+      "empty": "Chưa có sản phẩm nào",
+      "emptyAction": "Thêm sản phẩm đầu tiên"
+    },
+
+    "badge": {
+      "lowStock": "Tồn thấp",
+      "active": "Đang bán",
+      "inactive": "Đã ẩn"
+    },
+
+    "actions": {
+      "view": "Xem",
+      "edit": "Sửa",
+      "deactivate": "Ẩn",
+      "cancel": "Huỷ",
+      "save": "Lưu",
+      "creating": "Đang tạo...",
+      "saving": "Đang lưu..."
+    },
+
+    "confirm": {
+      "deactivateTitle": "Ẩn sản phẩm?",
+      "deactivateMessage": "Sản phẩm \"{name}\" sẽ bị ẩn khỏi danh sách bán hàng. Bạn vẫn có thể xem lại sau.",
+      "deactivateConfirm": "Xác nhận ẩn",
+      "cancel": "Giữ lại"
+    },
+
+    "toast": {
+      "created": "Đã tạo sản phẩm {name}",
+      "updated": "Đã cập nhật sản phẩm {name}",
+      "deactivated": "Đã ẩn sản phẩm {name}",
+      "error": "Có lỗi xảy ra",
+      "conflict": "Sản phẩm đã bị sửa bởi người khác. Vui lòng tải lại trang."
+    },
+
+    "errors": {
+      "loadFailed": "Không thể tải danh sách sản phẩm",
+      "loadFailedAction": "Thử lại",
+      "notFound": "Không tìm thấy sản phẩm",
+      "networkError": "Mất kết nối đến máy chủ",
+      "nameRequired": "Tên sản phẩm là bắt buộc",
+      "unitRequired": "Đơn vị tính là bắt buộc",
+      "pricePositive": "Giá bán phải lớn hơn 0",
+      "stockNonNegative": "Tồn kho không được âm",
+      "minStockNonNegative": "Tồn tối thiểu không được âm"
+    },
+
+    "unsaved": {
+      "title": "Bạn có thay đổi chưa lưu",
+      "message": "Dữ liệu bạn nhập sẽ bị mất nếu rời trang này."
+    }
+  },
+
   "nav": {
     "home": "Tổng quan",
     "profile": "Hồ sơ",
