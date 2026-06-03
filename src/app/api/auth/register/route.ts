@@ -1,6 +1,9 @@
 /**
  * POST /api/auth/register — Proxy register request to Spring Boot.
- * DELETE /api/auth/register — Logout (xóa cookie session).
+ * DELETE /api/auth/register — Logout (xóa cookie session) — DEPRECATED.
+ *
+ * Logout đã chuyển sang /api/auth/logout (xem route.ts bên cạnh).
+ * DELETE handler ở đây giữ lại để tương thích ngược với code cũ.
  *
  * Flow register:
  * 1. Receive email, password, name from client
@@ -8,10 +11,6 @@
  * 3. Get JWT token back
  * 4. Set httpOnly cookie (session_token)
  * 5. Return user info to client
- *
- * Flow logout:
- * 1. Xóa cookie session_token + refresh_token
- * 2. Client redirect về /login → OIDC flow (Spring Boot login page)
  */
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -22,6 +21,9 @@ interface ApiResponse<T> {
   message: string
   data?: T
 }
+
+// Access token TTL khớp với TokenSettings trong DataInitializer (24h).
+const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60  // 24h
 
 /** POST: register → proxy to Spring Boot → set cookie */
 export async function POST(request: NextRequest) {
@@ -51,13 +53,14 @@ export async function POST(request: NextRequest) {
       data: { email, role, name },
     })
 
-    // Set JWT cookie — auto login sau khi register, không cần OIDC flow
+    // Set JWT cookie — auto login sau khi register, không cần OIDC flow.
+    // TTL = 24h khớp với AuthService.login() và OIDC accessTokenTimeToLive.
     response.cookies.set('session_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 5 * 60, // 5 phút (khớp accessTokenTimeToLive)
+      maxAge: ACCESS_TOKEN_MAX_AGE,
     })
 
     return response
@@ -70,24 +73,25 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/** DELETE: logout — xóa tất cả cookies */
+/**
+ * DELETE: logout — DEPRECATED. Use POST /api/auth/logout instead.
+ * Giữ lại để tương thích ngược — chỉ clear cookies, không gọi Spring Boot.
+ */
 export async function DELETE() {
-  const response = NextResponse.json({ success: true, message: 'Logged out' })
+  const response = NextResponse.json({
+    success: true,
+    message: 'Cookies cleared (deprecated, use POST /api/auth/logout)',
+  })
 
-  response.cookies.set('session_token', '', {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     path: '/',
     maxAge: 0,
-  })
-  response.cookies.set('refresh_token', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  })
+  }
+  response.cookies.set('session_token', '', cookieOptions)
+  response.cookies.set('refresh_token', '', cookieOptions)
 
   return response
 }

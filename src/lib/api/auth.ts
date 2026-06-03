@@ -11,7 +11,7 @@
  * - Ky instance config → client.ts
  * - Logic auth → auth.ts
  */
-import ky, { HTTPError } from 'ky'
+import { HTTPError } from 'ky'
 import { api } from './client'
 import type { UserInfo, ApiResponse } from './types'
 
@@ -55,14 +55,29 @@ export async function registerUser(
 }
 
 /**
- * Đăng xuất — xóa httpOnly cookie session_token.
+ * Đăng xuất — xóa session ở cả Next.js lẫn Spring Boot.
  *
  * Flow:
- * 1. Gọi DELETE /api/auth/register → server xóa cookie
- * 2. Redirect về /login → OIDC flow (Spring Boot login page)
+ * 1. Gọi POST /api/auth/logout → Next.js proxy sang Spring Boot
+ *    /api/auth/session/invalidate để hủy Spring session (JSESSIONID)
+ * 2. Server clear cookies: session_token, refresh_token
+ * 3. Redirect về /<locale>/login?logout=true (kèm query param để login
+ *    page biết hiển thị "đã đăng xuất" thay vì auto-redirect OIDC)
+ *
+ * Tại sao cần qua server?
+ * - JSESSIONID là cookie của Spring Boot (port 8080), Next.js (port 3000)
+ *   không thể xóa cookie của domain khác port bằng cách set maxAge=0
+ * - Phải gọi server-side để Spring Boot invalidate session
  */
 export async function logout(): Promise<void> {
-  await api.delete('auth/register')
-  // Reload trang → proxy.ts kiểm tra cookie → không có → redirect /login
-  window.location.href = '/login'
+  try {
+    const res = await api.post('auth/logout').json<ApiResponse<{ redirect: string }>>()
+    // Server trả về URL redirect có kèm ?logout=true
+    window.location.href = res.data?.redirect ?? '/vi/login?logout=true'
+  } catch (error) {
+    // Fallback khi logout API fail: vẫn cho user thoát (clear cookies thủ công)
+    console.error('Logout API failed, falling back to manual redirect:', error)
+    const locale = window.location.pathname.split('/')[1] ?? 'vi'
+    window.location.href = `/${locale}/login?logout=true`
+  }
 }

@@ -111,7 +111,17 @@
       "email": "Email",
       "password": "Mật khẩu",
       "submit": "Đăng nhập",
-      "loading": "Đang đăng nhập..."
+      "loading": "Đang đăng nhập...",
+      "loggedOutTitle": "Đã đăng xuất",
+      "loggedOutMessage": "Bạn đã đăng xuất thành công. Đăng nhập lại để tiếp tục?",
+      "loginAgain": "Đăng nhập lại",
+      "errorTitle": "Đăng nhập không thành công",
+      "errorAuthFailed": "Xác thực thất bại. Vui lòng thử lại.",
+      "errorNoCode": "Thiếu mã xác thực. Vui lòng thử lại.",
+      "errorNoVerifier": "Phiên đăng nhập đã hết hạn. Vui lòng thử lại.",
+      "errorTokenExchange": "Không thể trao đổi token. Vui lòng thử lại.",
+      "errorNoToken": "Không nhận được token. Vui lòng thử lại.",
+      "errorUnknown": "Đã có lỗi xảy ra. Vui lòng thử lại."
     },
     "register": {
       "title": "Tạo tài khoản",

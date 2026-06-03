@@ -1,5 +1,5 @@
 /**
- * Header.tsx — Thanh header dashboard (có i18n).
+ * Header.tsx — Thanh header dashboard (có i18n + logout).
  */
 'use client'
 
@@ -15,6 +15,12 @@ export default function Header() {
 
   const currentNav = navItems.find((item) => item.href === pathname)
   const pageTitle = currentNav ? t(currentNav.key) : '—'
+
+  const handleLogout = async () => {
+    // logout() trong auth.ts đã xử lý redirect — gọi Spring Boot để
+    // invalidate session, clear cookies, rồi điều hướng về /<locale>/login?logout=true
+    await logout()
+  }
 
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-zinc-200">
@@ -33,11 +39,12 @@ export default function Header() {
           </div>
 
           <button
-            onClick={logout}
-            className="text-sm text-zinc-500 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-50"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-red-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50 border border-transparent hover:border-red-200"
             title={c('auth.logout')}
           >
-            ✕
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            <span className="hidden sm:inline">{c('auth.logout')}</span>
           </button>
         </div>
       </div>

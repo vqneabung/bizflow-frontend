@@ -111,7 +111,17 @@
       "email": "Email",
       "password": "Password",
       "submit": "Sign In",
-      "loading": "Signing in..."
+      "loading": "Signing in...",
+      "loggedOutTitle": "Signed Out",
+      "loggedOutMessage": "You have been signed out successfully. Sign in again to continue?",
+      "loginAgain": "Sign In Again",
+      "errorTitle": "Sign In Failed",
+      "errorAuthFailed": "Authentication failed. Please try again.",
+      "errorNoCode": "Missing authentication code. Please try again.",
+      "errorNoVerifier": "Login session expired. Please try again.",
+      "errorTokenExchange": "Could not exchange token. Please try again.",
+      "errorNoToken": "Did not receive token. Please try again.",
+      "errorUnknown": "An error occurred. Please try again."
     },
     "register": {
       "title": "Create Account",
