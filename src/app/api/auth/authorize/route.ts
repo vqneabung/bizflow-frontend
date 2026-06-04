@@ -19,10 +19,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-
-const AUTH_ISSUER = process.env.AUTH_ISSUER ?? 'http://localhost:8080'
-const CLIENT_ID = process.env.AUTH_CLIENT_ID ?? 'nextjs-client'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+import { AUTH_ISSUER, CLIENT_ID, APP_URL } from '@/lib/oauth'
 
 export async function GET(request: NextRequest) {
   // 1. Tạo PKCE code_verifier (32 bytes random, base64url)

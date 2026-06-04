@@ -2,23 +2,17 @@
  * GET /api/auth/callback/oidc — OIDC callback handler.
  *
  * Nhận authorization code từ Spring Boot Authorization Server,
- * exchange lấy JWT token, set cookie session.
+ * exchange lấy JWT token, set cookie session, redirect đến Spring Boot
+ * central redirect endpoint để navigate đúng dashboard theo role.
  *
- * Locale handling: cookie có thể được truyền qua từ /authorize
- * (state param). Mặc định 'vi' nếu không detect được.
+ * Tại sao redirect qua Spring Boot thay vì tự check role?
+ * - Spring Boot có session (JSESSIONID) biết chính xác role của user
+ * - Single source of truth: mọi redirect quyết định ở 1 nơi duy nhất
+ * - Không cần decode JWT trong Next.js (đơn giản hơn, ít bug hơn)
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-
-const AUTH_ISSUER = process.env.AUTH_ISSUER ?? 'http://localhost:8080'
-const CLIENT_ID = process.env.AUTH_CLIENT_ID ?? 'nextjs-client'
-const CLIENT_SECRET = process.env.AUTH_CLIENT_SECRET ?? 'nextjs-secret'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-
-// Access token TTL khớp với TokenSettings trong DataInitializer (24h).
-// Trước đây là 5 phút → user bị logout ngầm → UX kém.
-const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60  // 24h
-const REFRESH_TOKEN_MAX_AGE = 30 * 24 * 60 * 60  // 30d
+import { AUTH_ISSUER, CLIENT_ID, CLIENT_SECRET, APP_URL, ACCESS_TOKEN_MAX_AGE, REFRESH_TOKEN_MAX_AGE } from '@/lib/oauth'
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,7 +20,6 @@ export async function GET(request: NextRequest) {
     const errorParam = request.nextUrl.searchParams.get('error')
     const stateParam = request.nextUrl.searchParams.get('state')
 
-    // Detect locale từ state param (được set bởi /authorize) hoặc fallback 'vi'
     const locale = detectLocaleFromState(stateParam)
 
     if (errorParam) {
@@ -68,9 +61,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL(`/${locale}/login?error=no_token`, request.url))
     }
 
-    // P2-3: Redirect về /<locale>/dashboard (trước đây là /dashboard — thiếu locale,
-    // proxy.ts tự thêm locale nhưng gây 1 redirect thừa)
-    const response = NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url))
+    // Redirect về Spring Boot /redirect-dashboard — Spring Boot đọc session
+    // (JSESSIONID) và quyết định redirect theo role (single source of truth).
+    const response = NextResponse.redirect(new URL(`${AUTH_ISSUER}/dispatch`))
 
     response.cookies.set('session_token', accessToken, {
       httpOnly: true,
@@ -101,7 +94,6 @@ export async function GET(request: NextRequest) {
     return response
   } catch (err) {
     console.error('Callback error:', err)
-    // Detect locale từ cookie khi có lỗi
     const cookieStore = await cookies()
     const locale = cookieStore.get('NEXT_LOCALE')?.value ?? 'vi'
     return NextResponse.redirect(new URL(`/${locale}/login?error=unknown`, request.url))
@@ -110,9 +102,6 @@ export async function GET(request: NextRequest) {
 
 /**
  * Extract locale từ state param.
- *
- * /authorize encode locale vào state theo format `<csrf>.<locale>`.
- * Nếu parse fail → fallback 'vi'.
  */
 function detectLocaleFromState(state: string | null): 'vi' | 'en' {
   if (!state) return 'vi'

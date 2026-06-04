@@ -5,21 +5,14 @@
  * 1. Client gọi POST /api/auth/logout (kèm tất cả cookies)
  * 2. Server-side: forward request sang Spring Boot /api/auth/session/invalidate
  *    kèm Cookie: JSESSIONID=... để hủy Spring Security session
- * 3. Clear tất cả cookies phía Next.js: session_token, refresh_token
+ * 3. Clear cookies phía Next.js: session_token, refresh_token
  * 4. Trả về JSON { success: true, redirect: '/<locale>/login?logout=true' }
  *
- * Tại sao cần call Spring Boot?
- * - Spring Boot form login tạo HttpSession + JSESSIONID cookie
- * - Nếu chỉ xóa session_token ở Next.js → JSESSIONID còn → OIDC auto-authorize
- *   ngay lập tức → user vẫn đăng nhập dù đã "logout"
- *
- * Lý do dùng POST thay vì GET: logout có side effect, không nên allow
- * browser prefetch/refresh. Idempotent trong practice.
+ * Lý do dùng POST: logout có side effect, không nên allow browser prefetch.
  */
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-
-const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:8080'
+import { API_BASE } from '@/lib/oauth'
 
 export async function POST(request: NextRequest) {
   // 1) Build Cookie header từ request của browser để forward sang Spring
@@ -79,14 +72,6 @@ export async function POST(request: NextRequest) {
   }
   response.cookies.set('session_token', '', cookieOptions)
   response.cookies.set('refresh_token', '', cookieOptions)
-
-  // Cũng xóa JSESSIONID ở domain Next.js (best-effort, Spring Boot set
-  // JSESSIONID ở port 8080 nên xóa ở 3000 không có tác dụng thực tế —
-  // Spring session đã bị invalidate ở bước 2 là đủ)
-  response.cookies.set('JSESSIONID', '', {
-    path: '/',
-    maxAge: 0,
-  })
 
   return response
 }

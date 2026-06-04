@@ -1,11 +1,7 @@
 /**
  * POST /api/auth/register — Proxy register request to Spring Boot.
- * DELETE /api/auth/register — Logout (xóa cookie session) — DEPRECATED.
  *
- * Logout đã chuyển sang /api/auth/logout (xem route.ts bên cạnh).
- * DELETE handler ở đây giữ lại để tương thích ngược với code cũ.
- *
- * Flow register:
+ * Flow:
  * 1. Receive email, password, name from client
  * 2. Forward to Spring Boot /api/auth/register
  * 3. Get JWT token back
@@ -13,17 +9,8 @@
  * 5. Return user info to client
  */
 import { NextRequest, NextResponse } from 'next/server'
-
-const API_BASE = process.env.API_BASE_URL ?? 'http://localhost:8080'
-
-interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data?: T
-}
-
-// Access token TTL khớp với TokenSettings trong DataInitializer (24h).
-const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60  // 24h
+import { API_BASE, ACCESS_TOKEN_MAX_AGE } from '@/lib/oauth'
+import type { ApiResponse } from '@/lib/api/types'
 
 /** POST: register → proxy to Spring Boot → set cookie */
 export async function POST(request: NextRequest) {
@@ -73,25 +60,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * DELETE: logout — DEPRECATED. Use POST /api/auth/logout instead.
- * Giữ lại để tương thích ngược — chỉ clear cookies, không gọi Spring Boot.
- */
-export async function DELETE() {
-  const response = NextResponse.json({
-    success: true,
-    message: 'Cookies cleared (deprecated, use POST /api/auth/logout)',
-  })
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
-    path: '/',
-    maxAge: 0,
-  }
-  response.cookies.set('session_token', '', cookieOptions)
-  response.cookies.set('refresh_token', '', cookieOptions)
-
-  return response
-}
