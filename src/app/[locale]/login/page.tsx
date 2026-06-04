@@ -1,5 +1,5 @@
 /**
- * Login page — Logic chia 2 trường hợp:
+ * Login page — Logic chia 3 trường hợp:
  *
  * 1. Có query param `?logout=true` → User vừa logout.
  *    KHÔNG auto-redirect OIDC (vì JSESSIONID ở Spring Boot vừa bị hủy,
@@ -10,10 +10,12 @@
  *    (auth_failed, no_code, no_verifier, token_exchange, no_token, unknown).
  *    Hiển thị thông báo lỗi + nút "Thử lại" (cũng trigger OIDC).
  *
- * 3. Không có query param → Auto-redirect OIDC (UX cũ, vẫn giữ).
+ * 3. Không có query param → Auto-redirect OIDC.
+ *    Dùng <AutoRedirect> (client) thay vì redirect() server-side để
+ *    tránh lỗi "Failed to fetch RSC payload" khi redirect qua cross-origin.
  */
-import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
+import { AutoRedirect } from '@/components/AutoRedirect'
 
 interface PageProps {
   params: Promise<{ locale: string }>
@@ -111,10 +113,11 @@ export default async function LoginPage({ params, searchParams }: PageProps) {
     )
   }
 
-  // Trường hợp 3: auto-redirect OIDC (mặc định, UX cũ)
-  // Pass locale qua query param để /authorize encode vào state
+  // Trường hợp 3: auto-redirect OIDC (mặc định)
+  // Dùng <AutoRedirect> client component thay vì redirect() server-side
+  // để tránh lỗi "Failed to fetch RSC payload" khi redirect cross-origin
   const redirectUrl = sp.redirect
     ? `/api/auth/authorize?locale=${locale}&redirect=${encodeURIComponent(sp.redirect)}`
     : `/api/auth/authorize?locale=${locale}`
-  redirect(redirectUrl)
+  return <AutoRedirect url={redirectUrl} />
 }
