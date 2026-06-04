@@ -1,16 +1,28 @@
-/**
- * Dashboard layout — Sidebar + Header cho dashboard (có i18n).
- */
+import { redirect } from '@/i18n/navigation'
+import { getCurrentUser } from '@/hooks/use-current-user'
 import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const user = await getCurrentUser()
+  if (!user) return redirect({ href: '/login', locale })
+
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="flex h-screen bg-zinc-50">
       <Sidebar />
-      <div className="md:pl-64 flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+      {/* md:ml-64 offset fixed sidebar (256px) — content không bị sidebar che */}
+      <div className="flex-1 md:ml-64 flex flex-col overflow-hidden">
+        <Header user={user} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+          {children}
+        </main>
       </div>
     </div>
   )

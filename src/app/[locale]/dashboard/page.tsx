@@ -1,21 +1,34 @@
-/**
- * Dashboard Home — Trang tổng quan chính (có i18n).
- */
 import { getTranslations } from 'next-intl/server'
+import { getCurrentUser } from '@/hooks/use-current-user'
+import { redirect } from '@/i18n/navigation'
 import UserInfoCard from '@/components/UserInfoCard'
 import StatCard from '@/components/StatCard'
-import { mockUser, mockStats } from '@/lib/constants'
 
-export default async function DashboardPage() {
+const defaultStats = [
+  { key: 'revenue', icon: '💰', value: '0₫' },
+  { key: 'orders', icon: '📦', value: '0' },
+  { key: 'debt', icon: '📋', value: '0₫' },
+  { key: 'stock', icon: '📊', value: '0' },
+] as const
+
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const user = await getCurrentUser()
+  if (!user) return redirect({ href: '/login', locale })
+
   const t = await getTranslations('dashboard')
 
   return (
     <div className="space-y-6">
-      <UserInfoCard user={mockUser} />
+      <UserInfoCard user={user} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {mockStats.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
+        {defaultStats.map((stat) => (
+          <StatCard key={stat.key} statKey={stat.key} icon={stat.icon} value={stat.value} />
         ))}
       </div>
 

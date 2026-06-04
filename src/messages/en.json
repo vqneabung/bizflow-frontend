@@ -148,7 +148,7 @@
       "revenue": "Today's Revenue",
       "orders": "Today's Orders",
       "debt": "Customer Debt",
-      "inventory": "Stock Items",
+      "stock": "Stock Items",
       "comparedToYesterday": "vs yesterday"
     },
     "chart": {

@@ -1,10 +1,8 @@
-/**
- * PublicHeader.tsx — Thanh navbar cho trang public (có i18n).
- */
 'use client'
 
 import { useTranslations } from 'next-intl'
 import { Link, usePathname } from '@/i18n/navigation'
+import { Button } from '@/components/ui/button'
 
 export default function PublicHeader() {
   const pathname = usePathname()
@@ -41,15 +39,12 @@ export default function PublicHeader() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
-              {c('auth.login')}
-            </Link>
-            <Link
-              href="/register"
-              className="text-sm font-medium bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors"
-            >
-              {c('auth.register')}
-            </Link>
+            <Button variant="ghost" asChild>
+              <Link href="/login">{c('auth.login')}</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">{c('auth.register')}</Link>
+            </Button>
           </div>
         </div>
       </div>

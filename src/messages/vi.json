@@ -148,7 +148,7 @@
       "revenue": "Doanh thu hôm nay",
       "orders": "Đơn hàng hôm nay",
       "debt": "Công nợ khách hàng",
-      "inventory": "Sản phẩm tồn kho",
+      "stock": "Sản phẩm tồn kho",
       "comparedToYesterday": "so với hôm qua"
     },
     "chart": {

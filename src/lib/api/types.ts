@@ -5,11 +5,13 @@
  * Mỗi interface chỉ chứa data contract, không có methods.
  */
 
-/** Thông tin user trả về sau khi login/register */
+/** Thông tin user trả về sau khi login/register + /api/auth/me */
 export interface UserInfo {
+  id: string
   email: string
+  name: string | null
   role: string
-  name?: string | null
+  joinedAt: string
 }
 
 /** Response chuẩn từ tất cả API endpoints */

@@ -1,14 +1,10 @@
-/**
- * Sidebar.tsx — Thanh điều hướng bên trái dashboard (có i18n).
- *
- * Navigation labels lấy từ translations (namespace 'nav').
- * Item active được highlight dựa trên pathname hiện tại.
- */
 'use client'
 
 import { useTranslations } from 'next-intl'
 import { Link, usePathname } from '@/i18n/navigation'
 import { navItems } from '@/lib/constants'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -26,18 +22,22 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const isActive = pathname === item.href
           return (
-            <Link
+            <Button
               key={item.key}
-              href={item.href}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                transition-colors duration-150
-                ${isActive ? 'bg-brand-600 text-white' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'}
-              `}
+              variant="ghost"
+              asChild
+              className={cn(
+                'w-full justify-start gap-3 text-sm font-medium',
+                isActive
+                  ? 'bg-brand-600 text-white hover:bg-brand-600 hover:text-white'
+                  : 'text-zinc-300 hover:bg-zinc-800 hover:text-white',
+              )}
             >
-              <span className="text-lg">{item.icon}</span>
-              {t(item.key)}
-            </Link>
+              <Link href={item.href}>
+                <span className="text-lg">{item.icon}</span>
+                {t(item.key)}
+              </Link>
+            </Button>
           )
         })}
       </nav>

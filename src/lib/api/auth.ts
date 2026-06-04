@@ -69,6 +69,18 @@ export async function registerUser(
  *   không thể xóa cookie của domain khác port bằng cách set maxAge=0
  * - Phải gọi server-side để Spring Boot invalidate session
  */
+/**
+ * Lấy thông tin người dùng hiện tại từ JWT session_token.
+ * Gọi GET /api/auth/me → Spring Boot /api/auth/me
+ * Trả về UserInfo (id, email, name, role, joinedAt).
+ * Dùng server-side (cookies tự động gửi kèm request).
+ */
+export async function getMe(): Promise<UserInfo> {
+  const res = await api.get('auth/me').json<ApiResponse<UserInfo>>()
+  if (!res.data) throw new Error(res.message)
+  return res.data
+}
+
 export async function logout(): Promise<void> {
   try {
     const res = await api.post('auth/logout').json<ApiResponse<{ redirect: string }>>()
