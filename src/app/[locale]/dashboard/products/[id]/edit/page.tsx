@@ -3,6 +3,10 @@
  *
  * Load dữ liệu hiện tại từ API, fill vào form.
  * Khi submit, chỉ gửi các trường thay đổi (PATCH-style).
+ *
+ * UX:
+ * - Header có nút Quay lại + breadcrumb
+ * - Form full-width 2 cột với shadcn Card
  */
 'use client'
 
@@ -10,6 +14,8 @@ import { useState, useEffect, use } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { toast } from 'sonner'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import ProductForm, { type EditFormData } from '@/components/products/ProductForm'
 import { ProductDetailSkeleton } from '@/components/products/ProductSkeleton'
 import { getProduct, updateProduct } from '@/lib/api/products'
@@ -70,9 +76,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <span className="text-4xl mb-3">❌</span>
-        <p className="text-sm text-zinc-600 mb-4">{error ?? t('errors.notFound')}</p>
-        <Link href="/dashboard/products" className="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-medium">
-          ← {t('title')}
+        <p className="text-sm text-muted-foreground mb-4">{error ?? t('errors.notFound')}</p>
+        <Link href="/dashboard/products">
+          <Button variant="default">← {t('title')}</Button>
         </Link>
       </div>
     )
@@ -80,18 +86,35 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div>
-        <nav className="text-xs text-zinc-400 mb-1">
-          <Link href="/dashboard" className="hover:text-zinc-600">{d('title')}</Link>
-          <span className="mx-1">/</span>
-          <Link href="/dashboard/products" className="hover:text-zinc-600">{t('title')}</Link>
-          <span className="mx-1">/</span>
-          <Link href={`/dashboard/products/${id}`} className="hover:text-zinc-600">{product.name}</Link>
-          <span className="mx-1">/</span>
-          <span className="text-zinc-700 font-medium">{t('edit')}</span>
-        </nav>
-        <h2 className="text-lg font-semibold text-zinc-900">{t('edit')}</h2>
+      {/* Header with back button + breadcrumb */}
+      <div className="flex items-start gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="mt-0.5 shrink-0"
+          onClick={() => router.back()}
+          aria-label="Quay lại"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <nav className="text-xs text-muted-foreground mb-0.5">
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">
+              {d('title')}
+            </Link>
+            <span className="mx-1">/</span>
+            <Link href="/dashboard/products" className="hover:text-foreground transition-colors">
+              {t('title')}
+            </Link>
+            <span className="mx-1">/</span>
+            <Link href={`/dashboard/products/${id}`} className="hover:text-foreground transition-colors">
+              {product.name}
+            </Link>
+            <span className="mx-1">/</span>
+            <span className="font-medium text-foreground">{t('edit')}</span>
+          </nav>
+          <h1 className="text-xl font-semibold text-foreground">{t('edit')}</h1>
+        </div>
       </div>
 
       <ProductForm

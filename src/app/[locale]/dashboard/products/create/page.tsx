@@ -1,5 +1,9 @@
 /**
  * Create product page — Form tạo sản phẩm mới.
+ *
+ * UX:
+ * - Header có nút Quay lại + breadcrumb
+ * - Form full-width 2 cột với shadcn Card
  */
 'use client'
 
@@ -7,6 +11,8 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { toast } from 'sonner'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import ProductForm, { type CreateFormData } from '@/components/products/ProductForm'
 import { createProduct } from '@/lib/api/products'
 import type { ApiResponse, ProductResponse } from '@/lib/api/product-types'
@@ -35,16 +41,31 @@ export default function CreateProductPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div>
-        <nav className="text-xs text-zinc-400 mb-1">
-          <Link href="/dashboard" className="hover:text-zinc-600">{d('title')}</Link>
-          <span className="mx-1">/</span>
-          <Link href="/dashboard/products" className="hover:text-zinc-600">{t('title')}</Link>
-          <span className="mx-1">/</span>
-          <span className="text-zinc-700 font-medium">{t('create')}</span>
-        </nav>
-        <h2 className="text-lg font-semibold text-zinc-900">{t('create')}</h2>
+      {/* Header with back button + breadcrumb */}
+      <div className="flex items-start gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="mt-0.5 shrink-0"
+          onClick={() => router.back()}
+          aria-label="Quay lại"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <nav className="text-xs text-muted-foreground mb-0.5">
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">
+              {d('title')}
+            </Link>
+            <span className="mx-1">/</span>
+            <Link href="/dashboard/products" className="hover:text-foreground transition-colors">
+              {t('title')}
+            </Link>
+            <span className="mx-1">/</span>
+            <span className="font-medium text-foreground">{t('create')}</span>
+          </nav>
+          <h1 className="text-xl font-semibold text-foreground">{t('create')}</h1>
+        </div>
       </div>
 
       <ProductForm

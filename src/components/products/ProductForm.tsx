@@ -1,5 +1,5 @@
 /**
- * ProductForm.tsx — Form tạo/sửa sản phẩm (react-hook-form + zod).
+ * ProductForm.tsx — Form tạo/sửa sản phẩm (react-hook-form + zod + shadcn).
  *
  * Dùng chung cho cả create và edit:
  * - Create: tất cả fields required
@@ -7,10 +7,10 @@
  *
  * UX:
  * - Validation real-time (onChange mode)
- * - Input masking cho giá (tự động thêm dấu phân cách)
  * - Error message dưới từng field
  * - Loading state trên submit button
  * - Unsaved changes warning
+ * - 2-column layout with shadcn Card
  */
 'use client'
 
@@ -19,6 +19,10 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 // ===== Zod schema =====
 const createSchema = z.object({
@@ -104,130 +108,189 @@ export default function ProductForm({
     const err = errors[field]
     if (!err) return undefined
     const key = err.message as string
-    // Try to get from products.errors namespace first, fallback to raw message
     const translation = e(key as any)
     return translation !== key ? translation : String(err?.message ?? '')
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl space-y-6">
       {/* Server error */}
       {serverError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+        <div className="bg-destructive/10 border border-destructive/30 text-destructive text-sm px-4 py-3 rounded-lg">
           {serverError}
         </div>
       )}
 
-      {/* ===== Thông tin cơ bản ===== */}
-      <section className="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm space-y-5">
-        <h3 className="text-base font-semibold text-zinc-900 pb-1 border-b border-zinc-100">
-          📋 {mode === 'create' ? t('create') : t('edit')}
-        </h3>
-
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            {t('fields.name')} <span className="text-red-500">*</span>
-          </label>
-          <input {...register('name')} placeholder={t('fields.namePlaceholder')}
-            className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isSubmitting} />
-          {errors.name && <p className="mt-1 text-xs text-red-600">{getFieldError('name')}</p>}
-        </div>
-
-        {/* Primary Unit */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            {t('fields.primaryUnit')} <span className="text-red-500">*</span>
-          </label>
-          <input {...register('primaryUnit')} placeholder={t('fields.primaryUnitPlaceholder')}
-            className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
-            disabled={isSubmitting} />
-          {errors.primaryUnit && <p className="mt-1 text-xs text-red-600">{getFieldError('primaryUnit')}</p>}
-        </div>
-
-        {/* Category */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            {t('fields.category')}
-          </label>
-          <input {...register('category')} placeholder={t('fields.categoryPlaceholder')}
-            className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50"
-            disabled={isSubmitting} />
-          {errors.category && <p className="mt-1 text-xs text-red-600">{getFieldError('category')}</p>}
-        </div>
-
-        {/* Price + Cost Price */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              {t('fields.price')} <span className="text-red-500">*</span>
-            </label>
-            <input type="number" step="1" min="1" {...register('price', { valueAsNumber: true })}
-              placeholder={t('fields.pricePlaceholder')}
-              className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-            {errors.price && <p className="mt-1 text-xs text-red-600">{getFieldError('price')}</p>}
+      {/* ===== Thông tin sản phẩm ===== */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {mode === 'create' ? t('create') : t('edit')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          {/* Row 1: Name + Primary Unit */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                {t('fields.name')} <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="name"
+                {...register('name')}
+                placeholder={t('fields.namePlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.name && (
+                <p className="text-xs text-destructive">{getFieldError('name')}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="primaryUnit">
+                {t('fields.primaryUnit')} <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="primaryUnit"
+                {...register('primaryUnit')}
+                placeholder={t('fields.primaryUnitPlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.primaryUnit && (
+                <p className="text-xs text-destructive">{getFieldError('primaryUnit')}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              {t('fields.costPrice')}
-            </label>
-            <input type="number" step="1" min="0" {...register('costPrice', { valueAsNumber: true, setValueAs: v => v === '' ? undefined : parseFloat(v) })}
-              placeholder={t('fields.costPricePlaceholder')}
-              className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-          </div>
-        </div>
 
-        {/* Stock + Min Stock */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              {t('fields.stock')}
-            </label>
-            <input type="number" step="0.01" min="0" {...register('stock', { valueAsNumber: true })}
-              className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-            {errors.stock && <p className="mt-1 text-xs text-red-600">{getFieldError('stock')}</p>}
+          {/* Row 2: Category + Barcode */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="category">{t('fields.category')}</Label>
+              <Input
+                id="category"
+                {...register('category')}
+                placeholder={t('fields.categoryPlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.category && (
+                <p className="text-xs text-destructive">{getFieldError('category')}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="barcode">{t('fields.barcode')}</Label>
+              <Input
+                id="barcode"
+                {...register('barcode')}
+                placeholder={t('fields.barcodePlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.barcode && (
+                <p className="text-xs text-destructive">{getFieldError('barcode')}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              {t('fields.minStock')}
-            </label>
-            <input type="number" step="0.01" min="0" {...register('minStock', { valueAsNumber: true })}
-              className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-            {errors.minStock && <p className="mt-1 text-xs text-red-600">{getFieldError('minStock')}</p>}
+
+          {/* Visual separator */}
+          <div className="border-t border-border" />
+
+          {/* Row 3: Price + Cost Price */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="price">
+                {t('fields.price')} <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="price"
+                type="number"
+                step="1"
+                min="1"
+                {...register('price', { valueAsNumber: true })}
+                placeholder={t('fields.pricePlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.price && (
+                <p className="text-xs text-destructive">{getFieldError('price')}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="costPrice">{t('fields.costPrice')}</Label>
+              <Input
+                id="costPrice"
+                type="number"
+                step="1"
+                min="0"
+                {...register('costPrice', {
+                  valueAsNumber: true,
+                  setValueAs: v => (v === '' ? undefined : parseFloat(v)),
+                })}
+                placeholder={t('fields.costPricePlaceholder')}
+                disabled={isSubmitting}
+              />
+              {errors.costPrice && (
+                <p className="text-xs text-destructive">{getFieldError('costPrice')}</p>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Barcode */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            {t('fields.barcode')}
-          </label>
-          <input {...register('barcode')} placeholder={t('fields.barcodePlaceholder')}
-            className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-          {errors.barcode && <p className="mt-1 text-xs text-red-600">{getFieldError('barcode')}</p>}
-        </div>
+          {/* Row 4: Stock + Min Stock */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label htmlFor="stock">{t('fields.stock')}</Label>
+              <Input
+                id="stock"
+                type="number"
+                step="0.01"
+                min="0"
+                {...register('stock', { valueAsNumber: true })}
+                disabled={isSubmitting}
+              />
+              {errors.stock && (
+                <p className="text-xs text-destructive">{getFieldError('stock')}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="minStock">{t('fields.minStock')}</Label>
+              <Input
+                id="minStock"
+                type="number"
+                step="0.01"
+                min="0"
+                {...register('minStock', { valueAsNumber: true })}
+                disabled={isSubmitting}
+              />
+              {errors.minStock && (
+                <p className="text-xs text-destructive">{getFieldError('minStock')}</p>
+              )}
+            </div>
+          </div>
 
-        {/* Image URL */}
-        <div>
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            {t('fields.imageUrl')}
-          </label>
-          <input {...register('imageUrl')} placeholder={t('fields.imageUrlPlaceholder')}
-            className="w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 disabled:opacity-50" disabled={isSubmitting} />
-          {errors.imageUrl && <p className="mt-1 text-xs text-red-600">{getFieldError('imageUrl')}</p>}
-        </div>
-      </section>
+          {/* Visual separator */}
+          <div className="border-t border-border" />
+
+          {/* Row 5: Image URL (full width) */}
+          <div className="space-y-2">
+            <Label htmlFor="imageUrl">{t('fields.imageUrl')}</Label>
+            <Input
+              id="imageUrl"
+              {...register('imageUrl')}
+              placeholder={t('fields.imageUrlPlaceholder')}
+              disabled={isSubmitting}
+            />
+            {errors.imageUrl && (
+              <p className="text-xs text-destructive">{getFieldError('imageUrl')}</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Submit */}
-      <div className="flex items-center gap-3 pt-2">
-        <button type="submit" disabled={isSubmitting}
-          className="px-6 py-3 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+      <div className="flex items-center gap-3">
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? a('creating') : a('save')}
-        </button>
+        </Button>
         {mode === 'edit' && (
-          <span className="text-xs text-zinc-400">Chỉ gửi các trường đã thay đổi</span>
+          <span className="text-xs text-muted-foreground">
+            Chỉ gửi các trường đã thay đổi
+          </span>
         )}
       </div>
     </form>
