@@ -3,6 +3,9 @@
  *
  * Dùng Ky instance để gọi Next.js API route → proxy → Spring Boot.
  * JWT token được tự động gửi qua cookie (httpOnly).
+ *
+ * Types: ./product-types.ts (DTOs matching backend)
+ * Mappers: ../mappers/product-mapper.ts (FormData → DTO)
  */
 import { api } from './client'
 import type {
@@ -11,16 +14,8 @@ import type {
   CreateProductRequest,
   UpdateProductRequest,
   ApiResponse,
+  ListProductsParams,
 } from './product-types'
-
-export interface ListProductsParams {
-  search?: string
-  category?: string
-  page?: number       // 1-based from UI
-  size?: number
-  sortBy?: string
-  sortDir?: 'asc' | 'desc'
-}
 
 /**
  * Danh sách sản phẩm (phân trang + tìm kiếm + lọc).
@@ -30,7 +25,7 @@ export interface ListProductsParams {
 export async function listProducts(params: ListProductsParams = {}): Promise<PaginationResponse<ProductResponse>> {
   const searchParams = new URLSearchParams()
   if (params.search) searchParams.set('search', params.search)
-  if (params.category) searchParams.set('category', params.category)
+  if (params.categoryId) searchParams.set('categoryId', params.categoryId)
   if (params.page) searchParams.set('page', String(params.page))
   if (params.size) searchParams.set('size', String(params.size))
   if (params.sortBy) searchParams.set('sortBy', params.sortBy)

@@ -3,31 +3,22 @@
  *
  * Desktop (≥768px): table với sort header, search, pagination.
  * Mobile (<768px): card view, mỗi sản phẩm là 1 card.
+ *
+ * Auto-display first image (imageKeys[0]) cho mỗi sản phẩm —
+ * dùng useImageUrls batch hook để resolve nhiều URLs song song,
+ * tận dụng Dexie cache.
  */
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { ImageOff, Loader2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
 import type { ProductResponse, PaginationMeta } from '@/lib/api/product-types'
+import { useImageUrl } from '@/lib/hooks/use-image-url'
 
 /** Format giá VND */
 function formatPrice(price: number): string {
   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
-}
-
-/** Format ngày relative (VD: "2 giờ trước") */
-function formatRelativeTime(dateStr: string): string {
-  const now = Date.now()
-  const date = new Date(dateStr).getTime()
-  const diff = now - date
-  const minutes = Math.floor(diff / 60000)
-  if (minutes < 1) return 'Vừa xong'
-  if (minutes < 60) return `${minutes} phút trước`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours} giờ trước`
-  const days = Math.floor(hours / 24)
-  if (days < 30) return `${days} ngày trước`
-  return new Intl.DateTimeFormat('vi-VN').format(new Date(dateStr))
 }
 
 interface ProductTableProps {
@@ -41,6 +32,35 @@ interface ProductTableProps {
 }
 
 const SORTABLE_FIELDS = ['name', 'price', 'stock', 'createdAt']
+
+/** Sub-component: thumbnail ảnh đầu tiên với fallback */
+function ProductThumbnail({ objectKey }: { objectKey: string | null }) {
+  const { url, isLoading } = useImageUrl(objectKey)
+
+  if (!objectKey) {
+    return (
+      <div className="w-10 h-10 bg-zinc-100 rounded-md flex items-center justify-center">
+        <ImageOff className="h-4 w-4 text-zinc-300" />
+      </div>
+    )
+  }
+
+  if (isLoading || !url) {
+    return (
+      <div className="w-10 h-10 bg-zinc-100 rounded-md flex items-center justify-center">
+        <Loader2 className="h-4 w-4 text-zinc-300 animate-spin" />
+      </div>
+    )
+  }
+
+  return (
+    <img
+      src={url}
+      alt=""
+      className="w-10 h-10 object-cover rounded-md border border-zinc-200"
+    />
+  )
+}
 
 export default function ProductTable({
   products,
@@ -73,17 +93,23 @@ export default function ProductTable({
             key={product.id}
             className="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm space-y-3"
           >
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
+            <div className="flex items-start gap-3">
+              <ProductThumbnail objectKey={product.imageKeys[0] ?? null} />
+              <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-zinc-900 truncate">{product.name}</h4>
-                {product.category && (
-                  <span className="text-xs text-zinc-500">{product.category}</span>
+                {product.categoryName && (
+                  <span className="text-xs text-zinc-500">{product.categoryName}</span>
                 )}
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 {product.isLowStock && (
                   <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-medium">
                     ⚠ {t('badge.lowStock')}
+                  </span>
+                )}
+                {product.imageKeys.length > 1 && (
+                  <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-medium">
+                    +{product.imageKeys.length - 1}
                   </span>
                 )}
               </div>
@@ -97,7 +123,7 @@ export default function ProductTable({
               <div>
                 <span className="text-zinc-400 text-xs">{t('table.stock')}</span>
                 <p className="font-medium text-zinc-900">
-                  {product.stock} {product.primaryUnit}
+                  {product.stock} {product.primaryUnitName}
                   {product.isLowStock && <span className="text-red-600 ml-1">⚠</span>}
                 </p>
               </div>
@@ -132,6 +158,10 @@ export default function ProductTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-zinc-100 bg-zinc-50">
+              {/* Cột ảnh đầu tiên */}
+              <th className="px-3 py-3 text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider w-14">
+                {t('table.image')}
+              </th>
               {['name', 'category', 'price', 'stock', 'actions'].map((field) => (
                 <th
                   key={field}
@@ -149,6 +179,10 @@ export default function ProductTable({
           <tbody className="divide-y divide-zinc-100">
             {products.map((product) => (
               <tr key={product.id} className="hover:bg-zinc-50 transition-colors group">
+                {/* Cột thumbnail */}
+                <td className="px-3 py-2">
+                  <ProductThumbnail objectKey={product.imageKeys[0] ?? null} />
+                </td>
                 <td className="px-4 py-3.5">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-zinc-900 truncate max-w-[200px]">{product.name}</span>
@@ -157,11 +191,16 @@ export default function ProductTable({
                         ⚠ {t('badge.lowStock')}
                       </span>
                     )}
+                    {product.imageKeys.length > 1 && (
+                      <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-medium shrink-0">
+                        +{product.imageKeys.length - 1}
+                      </span>
+                    )}
                   </div>
-                  <span className="text-xs text-zinc-400">{product.primaryUnit}</span>
+                  <span className="text-xs text-zinc-400">{product.primaryUnitName}</span>
                 </td>
                 <td className="px-4 py-3.5 text-zinc-600">
-                  {product.category ?? <span className="text-zinc-300">—</span>}
+                  {product.categoryName ?? <span className="text-zinc-300">—</span>}
                 </td>
                 <td className="px-4 py-3.5 font-medium text-zinc-900">{formatPrice(product.price)}</td>
                 <td className="px-4 py-3.5">

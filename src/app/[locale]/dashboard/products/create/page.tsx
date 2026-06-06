@@ -1,9 +1,10 @@
 /**
  * Create product page — Form tạo sản phẩm mới.
  *
- * UX:
- * - Header có nút Quay lại + breadcrumb
- * - Form full-width 2 cột với shadcn Card
+ * Layer: PRESENTATION (UI only).
+ * Data: useCreateProductMutation (TanStack Query).
+ * Form validation: lib/schemas/product-schema.ts (zod).
+ * FormData → DTO: lib/mappers/product-mapper.ts.
  */
 'use client'
 
@@ -13,29 +14,30 @@ import { Link, useRouter } from '@/i18n/navigation'
 import { toast } from 'sonner'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import ProductForm, { type CreateFormData } from '@/components/products/ProductForm'
-import { createProduct } from '@/lib/api/products'
-import type { ApiResponse, ProductResponse } from '@/lib/api/product-types'
+import ProductForm from '@/components/products/ProductForm'
+import { useCreateProductMutation } from '@/lib/query/products'
+import { toCreateProductRequest } from '@/lib/mappers/product-mapper'
+import type { CreateProductFormData } from '@/lib/schemas/product-schema'
+import { getErrorMessage } from '@/lib/types/error'
 
 export default function CreateProductPage() {
   const t = useTranslations('products')
   const d = useTranslations('dashboard')
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
-  async function handleSubmit(data: CreateFormData) {
-    setIsSubmitting(true)
+  // ===== Mutation =====
+  const createMutation = useCreateProductMutation()
+
+  // ===== Handlers =====
+  async function handleSubmit(data: CreateProductFormData) {
     setServerError(null)
     try {
-      const result: ApiResponse<ProductResponse> = await createProduct(data as any)
+      await createMutation.mutateAsync(toCreateProductRequest(data))
       toast.success(t('toast.created', { name: data.name }))
       router.push('/dashboard/products')
-    } catch (err: any) {
-      const message = err?.message ?? t('toast.error')
-      setServerError(message)
-    } finally {
-      setIsSubmitting(false)
+    } catch (err: unknown) {
+      setServerError(getErrorMessage(err, t('toast.error')))
     }
   }
 
@@ -71,7 +73,7 @@ export default function CreateProductPage() {
       <ProductForm
         mode="create"
         onSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
+        isSubmitting={createMutation.isPending}
         serverError={serverError}
       />
     </div>

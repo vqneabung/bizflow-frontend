@@ -1,27 +1,34 @@
 /**
- * ProductSearchBar.tsx — Thanh tìm kiếm + lọc danh mục.
+ * ProductSearchBar.tsx — Thanh tìm kiếm + lọc danh mục (theo categoryId).
  *
  * UX:
  * - Debounce 300ms: tránh gọi API liên tục khi typing
  * - Filter badges: hiển thị filter đang active, có thể xoá từng cái
- * - Category dropdown: select HTML style với Tailwind
+ * - Category dropdown với {id, name} pairs
  */
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 
+export interface CategoryOption {
+  id: string
+  name: string
+}
+
 interface ProductSearchBarProps {
   search: string
-  category: string
-  categories: string[]
+  /** Current selected categoryId (UUID) */
+  categoryId: string
+  /** Category options {id, name}[] */
+  categories: CategoryOption[]
   onSearchChange: (value: string) => void
-  onCategoryChange: (value: string) => void
+  onCategoryChange: (categoryId: string) => void
 }
 
 export default function ProductSearchBar({
   search,
-  category,
+  categoryId,
   categories,
   onSearchChange,
   onCategoryChange,
@@ -50,12 +57,15 @@ export default function ProductSearchBar({
     setLocalSearch(search)
   }, [search])
 
-  const hasFilters = search || category
+  const hasFilters = search || categoryId
   const clearAll = () => {
     setLocalSearch('')
     onSearchChange('')
     onCategoryChange('')
   }
+
+  // Find selected category name
+  const selectedCategory = categories.find(c => c.id === categoryId)
 
   return (
     <div className="space-y-3">
@@ -75,15 +85,15 @@ export default function ProductSearchBar({
           />
         </div>
 
-        {/* Category filter */}
+        {/* Category filter (by UUID) */}
         <select
-          value={category}
+          value={categoryId}
           onChange={(e) => onCategoryChange(e.target.value)}
           className="px-4 py-2.5 rounded-xl border border-zinc-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
         >
           <option value="">{t('allCategories')}</option>
           {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
           ))}
         </select>
       </div>
@@ -97,9 +107,9 @@ export default function ProductSearchBar({
               <button onClick={() => { setLocalSearch(''); onSearchChange('') }} className="ml-1 hover:text-brand-900">✕</button>
             </span>
           )}
-          {category && (
+          {categoryId && selectedCategory && (
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-medium">
-              📂 {t('filterByCategory')}: {category}
+              📂 {t('filterByCategory')}: {selectedCategory.name}
               <button onClick={() => onCategoryChange('')} className="ml-1 hover:text-brand-900">✕</button>
             </span>
           )}

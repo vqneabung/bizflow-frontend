@@ -6,7 +6,6 @@ import { Link } from '@/i18n/navigation'
 
 export default async function LandingPage() {
   const t = await getTranslations('home')
-  const c = await getTranslations('common')
 
   const features = t.raw('features.items') as Array<{ icon: string; title: string; desc: string }>
   const steps = t.raw('steps.items') as Array<{ step: string; title: string; desc: string }>

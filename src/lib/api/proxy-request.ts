@@ -1,22 +1,22 @@
 /**
  * proxy-request.ts — Shared proxy utility cho mọi Next.js API route handler.
  *
- * Mỗi route handler chỉ cần 3-7 dòng thay vì 50-177 dòng:
- *   export const GET = (req, ctx) => handler(req, ctx, 'products')
+ * Dùng `undici` (server-side HTTP client) thay vì global `fetch` để:
+ * - Tận dụng connection pooling (Agent) — tái sử dụng TCP socket giữa các request
+ * - Latest undici features (Node.js bundled là version cũ)
+ * - Better error messages (UND_ERR_* codes)
  *
  * Hỗ trợ:
  * 1. Forward request → Spring Boot với Bearer token từ httpOnly cookie
  * 2. Auto-refresh token (optional) — gọi /oauth2/token → retry request
  * 3. Set-Cookie access_token + refresh_token mới nếu refresh thành công
- * 4. Body parsing (POST/PUT/PATCH) — chỉ read 1 lần (fix bug mất body khi retry)
+ * 4. Body parsing (POST/PUT/PATCH) — chỉ read 1 lần
  * 5. Search params forwarding
  * 6. Error handling (502 network error)
- *
- * Dùng chung constants từ lib/oauth.ts (API_BASE, AUTH_ISSUER, CLIENT_ID, …)
- * — single source of truth, không duplicate config.
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { fetch as undiciFetch, Agent } from 'undici'
 import {
   API_BASE,
   AUTH_ISSUER,
@@ -26,11 +26,16 @@ import {
   REFRESH_TOKEN_MAX_AGE,
 } from '@/lib/oauth'
 
+// ── Connection pool ─────────────────────────────────────────
+/** Connection pool Agent — reuse giữa các request để tránh handshake lại */
+const proxyAgent = new Agent({
+  keepAliveTimeout: 30_000,
+  keepAliveMaxTimeout: 60_000,
+  connections: 128,
+  pipelining: 1,
+})
+
 // ── Refresh token ──────────────────────────────────────────
-/**
- * Gọi Spring Boot /oauth2/token với grant_type=refresh_token.
- * Trả về cặp token mới, hoặc null nếu thất bại.
- */
 async function refreshAccessToken(
   refreshToken: string,
 ): Promise<{ access: string; refresh?: string } | null> {
@@ -41,16 +46,17 @@ async function refreshAccessToken(
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
     })
-    const res = await fetch(`${AUTH_ISSUER}/oauth2/token`, {
+    const res = await undiciFetch(`${AUTH_ISSUER}/oauth2/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params,
+      dispatcher: proxyAgent,
     })
     if (!res.ok) {
       console.error(`[refreshToken] HTTP ${res.status}`)
       return null
     }
-    const tokens = await res.json()
+    const tokens = await res.json() as Record<string, string>
     if (!tokens.access_token) return null
     return {
       access: tokens.access_token,
@@ -63,16 +69,12 @@ async function refreshAccessToken(
 }
 
 // ── Forward 1 request ──────────────────────────────────────
-/**
- * Gửi 1 request tới Spring Boot với token (từ cookie hoặc override).
- * @param body Được parse 1 lần duy nhất bên ngoài — tránh read lại request.json().
- */
 async function doForward(
   request: NextRequest,
   apiPath: string,
   body: unknown | undefined,
   accessTokenOverride?: string,
-): Promise<Response> {
+) {
   const cookieStore = await cookies()
   const token = accessTokenOverride ?? cookieStore.get('session_token')?.value
 
@@ -86,10 +88,11 @@ async function doForward(
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  return fetch(url, {
+  return undiciFetch(url, {
     method: request.method,
     headers,
     body: body != null ? JSON.stringify(body) : undefined,
+    dispatcher: proxyAgent,
   })
 }
 
@@ -162,13 +165,11 @@ export async function proxyRequest(
         )
       }
 
-      // Retry request gốc với access_token mới (body được reuse — không đọc lại)
+      // Retry với token mới
       springRes = await doForward(request, apiPath, body, refreshed.access)
 
       const json = await springRes.json().catch(() => null)
       const response = NextResponse.json(json, { status: springRes.status })
-
-      // Set cookie mới cho client (lần request sau sẽ dùng token mới)
       setAuthCookies(response, refreshed.access, refreshed.refresh)
       return response
     }

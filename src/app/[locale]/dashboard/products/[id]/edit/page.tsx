@@ -1,88 +1,60 @@
 /**
  * Edit product page — Form sửa sản phẩm.
  *
- * Load dữ liệu hiện tại từ API, fill vào form.
- * Khi submit, chỉ gửi các trường thay đổi (PATCH-style).
- *
- * UX:
- * - Header có nút Quay lại + breadcrumb
- * - Form full-width 2 cột với shadcn Card
+ * Layer: PRESENTATION (UI only).
+ * Data: useProductQuery + useUpdateProductMutation (TanStack Query).
+ * Form validation: lib/schemas/product-schema.ts (zod).
+ * FormData → DTO: lib/mappers/product-mapper.ts.
  */
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, use } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { toast } from 'sonner'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import ProductForm, { type EditFormData } from '@/components/products/ProductForm'
+import ProductForm from '@/components/products/ProductForm'
 import { ProductDetailSkeleton } from '@/components/products/ProductSkeleton'
-import { getProduct, updateProduct } from '@/lib/api/products'
-import type { ApiResponse, ProductResponse, UpdateProductRequest } from '@/lib/api/product-types'
+import {
+  useProductQuery,
+  useUpdateProductMutation,
+} from '@/lib/query/products'
+import { toUpdateProductRequest } from '@/lib/mappers/product-mapper'
+import type { EditProductFormData } from '@/lib/schemas/product-schema'
+import { getErrorMessage } from '@/lib/types/error'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const t = useTranslations('products')
   const d = useTranslations('dashboard')
   const router = useRouter()
-
-  const [product, setProduct] = useState<ProductResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
-  // Load existing product data
-  useEffect(() => {
-    setLoading(true)
-    getProduct(id)
-      .then((res) => {
-        if (res.data) setProduct(res.data)
-        else setError(t('errors.notFound'))
-      })
-      .catch(() => setError(t('errors.loadFailed')))
-      .finally(() => setLoading(false))
-  }, [id, t])
+  // ===== Data fetching =====
+  const { data: result, isPending } = useProductQuery(id)
 
-  // Submit handler — chỉ gửi field thay đổi
-  async function handleSubmit(data: EditFormData) {
-    setIsSubmitting(true)
+  // ===== Mutation =====
+  const updateMutation = useUpdateProductMutation()
+
+  // ===== Derived =====
+  const product = result?.data ?? null
+
+  // ===== Handlers =====
+  async function handleSubmit(data: EditProductFormData) {
     setServerError(null)
-
-    // Build PATCH payload — chỉ gửi field có giá trị
-    const payload: UpdateProductRequest = {}
-    for (const [key, value] of Object.entries(data)) {
-      if (value !== undefined && value !== '') {
-        (payload as any)[key] = value
-      }
-    }
-
     try {
-      const result: ApiResponse<ProductResponse> = await updateProduct(id, payload)
+      const payload = toUpdateProductRequest(data)
+      await updateMutation.mutateAsync({ id, data: payload })
       toast.success(t('toast.updated', { name: payload.name ?? product?.name ?? '' }))
       router.push('/dashboard/products')
-    } catch (err: any) {
-      const message = err?.message ?? t('toast.error')
-      setServerError(message)
-    } finally {
-      setIsSubmitting(false)
+    } catch (err: unknown) {
+      setServerError(getErrorMessage(err, t('toast.error')))
     }
   }
 
-  if (loading) return <ProductDetailSkeleton />
-
-  if (error || !product) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <span className="text-4xl mb-3">❌</span>
-        <p className="text-sm text-muted-foreground mb-4">{error ?? t('errors.notFound')}</p>
-        <Link href="/dashboard/products">
-          <Button variant="default">← {t('title')}</Button>
-        </Link>
-      </div>
-    )
-  }
+  // ===== Render states =====
+  if (isPending || !product) return <ProductDetailSkeleton />
 
   return (
     <div className="space-y-6">
@@ -121,17 +93,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         mode="edit"
         defaultValues={{
           name: product.name,
-          category: product.category ?? '',
-          primaryUnit: product.primaryUnit,
+          categoryId: product.categoryId ?? '',
+          primaryUnitId: product.primaryUnitId,
           price: product.price,
           costPrice: product.costPrice ?? undefined,
           stock: product.stock,
           minStock: product.minStock,
           imageUrl: product.imageUrl ?? '',
+          imageKeys: product.imageKeys ?? [],
           barcode: product.barcode ?? '',
         }}
+        existingImageKeys={product.imageKeys ?? []}
         onSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
+        isSubmitting={updateMutation.isPending}
         serverError={serverError}
       />
     </div>

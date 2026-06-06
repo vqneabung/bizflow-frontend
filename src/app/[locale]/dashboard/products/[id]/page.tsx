@@ -1,58 +1,60 @@
 /**
  * Product detail page — Chi tiết sản phẩm.
  *
- * Client component: gọi API để lấy chi tiết, xử lý deactivate.
+ * Layer: PRESENTATION (UI only).
+ * Data: useProductQuery + useDeactivateProductMutation (TanStack Query).
  */
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, use } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { toast } from 'sonner'
 import ProductDeleteDialog from '@/components/products/ProductDeleteDialog'
 import { ProductDetailSkeleton } from '@/components/products/ProductSkeleton'
-import { getProduct, deactivateProduct } from '@/lib/api/products'
-import type { ProductResponse } from '@/lib/api/product-types'
+import { useImageUrl } from '@/lib/hooks/use-image-url'
+import {
+  useProductQuery,
+  useDeactivateProductMutation,
+} from '@/lib/query/products'
+import { getErrorMessage } from '@/lib/types/error'
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const t = useTranslations('products')
   const d = useTranslations('dashboard')
   const router = useRouter()
-
-  const [product, setProduct] = useState<ProductResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [showDelete, setShowDelete] = useState(false)
 
-  useEffect(() => {
-    setLoading(true)
-    getProduct(id)
-      .then((res) => {
-        if (res.data) setProduct(res.data)
-        else setError(t('errors.notFound'))
-      })
-      .catch(() => setError(t('errors.loadFailed')))
-      .finally(() => setLoading(false))
-  }, [id, t])
+  // ===== Data fetching =====
+  const { data: result, isPending, isError } = useProductQuery(id)
 
+  // ===== Mutation =====
+  const deactivateMutation = useDeactivateProductMutation()
+
+  // ===== Derived =====
+  const product = result?.data ?? null
+  const notFound = isError || (result !== undefined && !result.data)
+
+  // ===== Handlers =====
   const handleDeactivate = async () => {
     try {
-      await deactivateProduct(id)
+      await deactivateMutation.mutateAsync(id)
       toast.success(t('toast.deactivated', { name: product?.name ?? '' }))
       router.push('/dashboard/products')
-    } catch (err: any) {
-      toast.error(err?.message ?? t('toast.error'))
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, t('toast.error')))
     }
   }
 
-  if (loading) return <ProductDetailSkeleton />
+  // ===== Render states =====
+  if (isPending) return <ProductDetailSkeleton />
 
-  if (error || !product) {
+  if (notFound || !product) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <span className="text-4xl mb-3">❌</span>
-        <p className="text-sm text-zinc-600 mb-4">{error ?? t('errors.notFound')}</p>
+        <p className="text-sm text-zinc-600 mb-4">{t('errors.notFound')}</p>
         <Link href="/dashboard/products" className="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-medium">
           ← {t('title')}
         </Link>
@@ -60,6 +62,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     )
   }
 
+  // ===== Helpers =====
   function formatPrice(val: number | null): string {
     if (val == null) return '—'
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val)
@@ -84,9 +87,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <h3 className="text-xl font-semibold text-zinc-900">{product.name}</h3>
-            {product.category && (
+            {product.categoryName && (
               <span className="inline-flex px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-xs font-medium">
-                {product.category}
+                {product.categoryName}
               </span>
             )}
           </div>
@@ -100,16 +103,30 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
+        {/* Image gallery — show all product images */}
+        {product.imageKeys.length > 0 && (
+          <div>
+            <p className="text-xs text-zinc-400 mb-2">{t('fields.images')} ({product.imageKeys.length})</p>
+            <div className="flex gap-2 flex-wrap">
+              {product.imageKeys.map((objectKey) => (
+                <ProductImage key={objectKey} objectKey={objectKey} />
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Field label={t('fields.price')} value={formatPrice(product.price)} highlight />
           <Field label={t('fields.costPrice')} value={formatPrice(product.costPrice)} />
-          <Field label={t('fields.stock')} value={`${product.stock} ${product.primaryUnit}`} highlight={product.isLowStock} />
-          <Field label={t('fields.minStock')} value={`${product.minStock} ${product.primaryUnit}`} />
-          <Field label={t('fields.primaryUnit')} value={product.primaryUnit} />
+          <Field label={t('fields.stock')} value={`${product.stock} ${product.primaryUnitName}`} highlight={product.isLowStock} />
+          <Field label={t('fields.minStock')} value={`${product.minStock} ${product.primaryUnitName}`} />
+          <Field label={t('fields.primaryUnit')} value={product.primaryUnitName} />
           <Field label={t('fields.barcode')} value={product.barcode ?? '—'} />
-          <Field label={t('fields.imageUrl')} value={product.imageUrl ? (
-            <a href={product.imageUrl} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline break-all">{product.imageUrl}</a>
-          ) : '—'} />
+          {product.imageUrl && (
+            <Field label={t('fields.imageUrl')} value={
+              <a href={product.imageUrl} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline break-all">{product.imageUrl}</a>
+            } />
+          )}
         </div>
       </div>
 
@@ -148,5 +165,25 @@ function Field({ label, value, highlight }: { label: string; value: React.ReactN
       <p className="text-xs text-zinc-400 mb-1">{label}</p>
       <p className={`text-sm font-medium ${highlight ? 'text-red-600' : 'text-zinc-900'}`}>{value}</p>
     </div>
+  )
+}
+
+/** Helper — hiển thị 1 ảnh với presigned URL */
+function ProductImage({ objectKey }: { objectKey: string }) {
+  const { url, isLoading, error } = useImageUrl(objectKey)
+  if (isLoading) {
+    return <div className="w-24 h-24 bg-zinc-100 animate-pulse rounded-lg" />
+  }
+  if (error || !url) {
+    return <div className="w-24 h-24 bg-red-50 rounded-lg flex items-center justify-center text-red-300 text-xs">Lỗi</div>
+  }
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer">
+      <img
+        src={url}
+        alt=""
+        className="w-24 h-24 object-cover rounded-lg border border-zinc-200 hover:border-primary transition-colors"
+      />
+    </a>
   )
 }

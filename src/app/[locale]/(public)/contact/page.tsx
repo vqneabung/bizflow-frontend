@@ -2,7 +2,6 @@
  * Contact page — Liên hệ Bizflow (có i18n).
  */
 import { getTranslations } from 'next-intl/server'
-import { Link } from '@/i18n/navigation'
 
 export default async function ContactPage() {
   const t = await getTranslations('contact')

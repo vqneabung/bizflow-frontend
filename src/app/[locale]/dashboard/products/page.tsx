@@ -1,12 +1,13 @@
 /**
  * Products list page — Danh sách sản phẩm.
  *
- * Client Component (interactive search, sort, pagination, deactivate).
- * Data fetching qua Ky → Next.js API route → Spring Boot.
+ * Layer: PRESENTATION (UI only).
+ * Data: useProductsQuery + useDeactivateProductMutation (TanStack Query).
+ * Category filter: dùng categoryId từ API reference data.
  */
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { toast } from 'sonner'
@@ -15,57 +16,53 @@ import ProductSearchBar from '@/components/products/ProductSearchBar'
 import ProductEmptyState from '@/components/products/ProductEmptyState'
 import ProductDeleteDialog from '@/components/products/ProductDeleteDialog'
 import { ProductTableSkeleton } from '@/components/products/ProductSkeleton'
-import { listProducts, deactivateProduct } from '@/lib/api/products'
-import type { ProductResponse, PaginationMeta } from '@/lib/api/product-types'
+import {
+  useProductsQuery,
+  useDeactivateProductMutation,
+} from '@/lib/query/products'
+import { listCategories } from '@/lib/api/reference'
+import { getErrorMessage } from '@/lib/types/error'
+import type { CategoryOption } from '@/components/products/ProductSearchBar'
 
 export default function ProductsPage() {
   const t = useTranslations('products')
   const d = useTranslations('dashboard')
 
-  // ===== State =====
-  const [products, setProducts] = useState<ProductResponse[]>([])
-  const [pagination, setPagination] = useState<PaginationMeta | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  // Filters
+  // ===== Filter state (UI only) =====
   const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('')
+  const [categoryId, setCategoryId] = useState('')
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
 
-  // Delete dialog
-  const [deleteTarget, setDeleteTarget] = useState<ProductResponse | null>(null)
-
-  // ===== Data fetching =====
-  const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const result = await listProducts({
-        search: search || undefined,
-        category: category || undefined,
-        page,
-        size: 20,
-        sortBy,
-        sortDir,
-      })
-      setProducts(result.data)
-      setPagination(result.pagination)
-    } catch (err) {
-      console.error('Failed to load products:', err)
-      setError(t('errors.loadFailed'))
-      setProducts([])
-      setPagination(null)
-    } finally {
-      setLoading(false)
-    }
-  }, [search, category, page, sortBy, sortDir, t])
+  // ===== Categories for filter dropdown =====
+  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([])
 
   useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+    listCategories()
+      .then((cats) => setCategoryOptions(cats.map(c => ({ id: c.id, name: c.name }))))
+      .catch(() => {}) // silently fail — filter just won't show categories
+  }, [])
+
+  // ===== Data fetching (TanStack Query) =====
+  const {
+    data: result,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useProductsQuery({
+    search: search || undefined,
+    categoryId: categoryId || undefined,
+    page,
+    size: 20,
+    sortBy,
+    sortDir,
+  })
+
+  // ===== Mutation =====
+  const deactivateMutation = useDeactivateProductMutation()
 
   // ===== Handlers =====
   const handleSort = (field: string) => {
@@ -84,24 +81,24 @@ export default function ProductsPage() {
   }
 
   const handleCategoryChange = (value: string) => {
-    setCategory(value)
+    setCategoryId(value)
     setPage(1)
   }
 
   const handleDeactivate = async () => {
     if (!deleteTarget) return
     try {
-      await deactivateProduct(deleteTarget.id)
+      await deactivateMutation.mutateAsync(deleteTarget.id)
       toast.success(t('toast.deactivated', { name: deleteTarget.name }))
       setDeleteTarget(null)
-      fetchProducts()
-    } catch (err: any) {
-      toast.error(err?.message ?? t('toast.error'))
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, t('toast.error')))
     }
   }
 
-  // ===== Derive categories from loaded products =====
-  const categories = [...new Set(products.map((p) => p.category).filter(Boolean))] as string[]
+  // ===== Derived =====
+  const products = result?.data ?? []
+  const pagination = result?.pagination ?? null
 
   return (
     <div className="space-y-6">
@@ -127,25 +124,25 @@ export default function ProductsPage() {
       {/* Search & Filter */}
       <ProductSearchBar
         search={search}
-        category={category}
-        categories={categories}
+        categoryId={categoryId}
+        categories={categoryOptions}
         onSearchChange={handleSearchChange}
         onCategoryChange={handleCategoryChange}
       />
 
       {/* Content */}
-      {loading ? (
+      {isPending ? (
         <ProductTableSkeleton />
-      ) : error ? (
+      ) : isError ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <span className="text-4xl mb-3">❌</span>
-          <p className="text-sm text-zinc-600 mb-4">{error}</p>
-          <button onClick={fetchProducts} className="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors">
+          <p className="text-sm text-zinc-600 mb-4">{getErrorMessage(error, t('errors.loadFailed'))}</p>
+          <button onClick={() => refetch()} className="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors">
             {t('errors.loadFailedAction')}
           </button>
         </div>
       ) : products.length === 0 ? (
-        <ProductEmptyState hasFilters={!!(search || category)} />
+        <ProductEmptyState hasFilters={!!(search || categoryId)} />
       ) : (
         <ProductTable
           products={products}
@@ -154,7 +151,7 @@ export default function ProductsPage() {
           sortDir={sortDir}
           onSort={handleSort}
           onPageChange={(p) => setPage(p + 1)}
-          onDeactivate={(p) => setDeleteTarget(p)}
+          onDeactivate={(p) => setDeleteTarget({ id: p.id, name: p.name })}
         />
       )}
 
