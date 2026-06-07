@@ -1,10 +1,12 @@
 /**
  * proxy-request.ts — Shared proxy utility cho mọi Next.js API route handler.
  *
- * Dùng `undici` (server-side HTTP client) thay vì global `fetch` để:
- * - Tận dụng connection pooling (Agent) — tái sử dụng TCP socket giữa các request
- * - Latest undici features (Node.js bundled là version cũ)
- * - Better error messages (UND_ERR_* codes)
+ * Dùng `got` (server-side HTTP client) thay vì `undici` vì:
+ * - Connection pooling mặc định (got dùng http.Agent keep-alive)
+ * - extend() tạo instance riêng cho Spring API vs OAuth endpoint
+ * - prefixUrl + searchParams tự động join
+ * - responseType: 'json' tự parse body
+ * - throwHttpErrors: false → server tự xử lý status code
  *
  * Hỗ trợ:
  * 1. Forward request → Spring Boot với Bearer token từ httpOnly cookie
@@ -16,47 +18,34 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { fetch as undiciFetch, Agent } from 'undici'
+import { springApi, oauthApi } from './server'
 import {
-  API_BASE,
-  AUTH_ISSUER,
   CLIENT_ID,
   CLIENT_SECRET,
   ACCESS_TOKEN_MAX_AGE,
   REFRESH_TOKEN_MAX_AGE,
 } from '@/lib/oauth'
 
-// ── Connection pool ─────────────────────────────────────────
-/** Connection pool Agent — reuse giữa các request để tránh handshake lại */
-const proxyAgent = new Agent({
-  keepAliveTimeout: 30_000,
-  keepAliveMaxTimeout: 60_000,
-  connections: 128,
-  pipelining: 1,
-})
-
 // ── Refresh token ──────────────────────────────────────────
 async function refreshAccessToken(
   refreshToken: string,
 ): Promise<{ access: string; refresh?: string } | null> {
   try {
-    const params = new URLSearchParams({
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+    const res = await oauthApi.post('oauth2/token', {
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+      },
     })
-    const res = await undiciFetch(`${AUTH_ISSUER}/oauth2/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params,
-      dispatcher: proxyAgent,
-    })
-    if (!res.ok) {
-      console.error(`[refreshToken] HTTP ${res.status}`)
+
+    if (res.statusCode !== 200) {
+      console.error(`[refreshToken] HTTP ${res.statusCode}`)
       return null
     }
-    const tokens = await res.json() as Record<string, string>
+
+    const tokens = res.body as unknown as Record<string, string>
     if (!tokens.access_token) return null
     return {
       access: tokens.access_token,
@@ -78,9 +67,6 @@ async function doForward(
   const cookieStore = await cookies()
   const token = accessTokenOverride ?? cookieStore.get('session_token')?.value
 
-  const qs = request.nextUrl.searchParams.toString()
-  const url = `${API_BASE}/api/${apiPath}${qs ? '?' + qs : ''}`
-
   const headers: Record<string, string> = {
     'Content-Type': request.headers.get('content-type') ?? 'application/json',
   }
@@ -88,11 +74,11 @@ async function doForward(
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  return undiciFetch(url, {
-    method: request.method,
+  return springApi(apiPath, {
+    method: request.method as 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     headers,
-    body: body != null ? JSON.stringify(body) : undefined,
-    dispatcher: proxyAgent,
+    searchParams: request.nextUrl.searchParams,
+    json: body != null ? (body as Record<string, unknown>) : undefined,
   })
 }
 
@@ -144,7 +130,7 @@ export async function proxyRequest(
     let springRes = await doForward(request, apiPath, body)
 
     // ── Bước 3: Auto-refresh nếu 401 + enableRefresh ──
-    if (springRes.status === 401 && options?.enableRefresh) {
+    if (springRes.statusCode === 401 && options?.enableRefresh) {
       const cookieStore = await cookies()
       const rt = cookieStore.get('refresh_token')?.value
 
@@ -168,15 +154,13 @@ export async function proxyRequest(
       // Retry với token mới
       springRes = await doForward(request, apiPath, body, refreshed.access)
 
-      const json = await springRes.json().catch(() => null)
-      const response = NextResponse.json(json, { status: springRes.status })
+      const response = NextResponse.json(springRes.body, { status: springRes.statusCode })
       setAuthCookies(response, refreshed.access, refreshed.refresh)
       return response
     }
 
     // ── Bước 4: Trả kết quả ──
-    const json = await springRes.json().catch(() => null)
-    return NextResponse.json(json, { status: springRes.status })
+    return NextResponse.json(springRes.body, { status: springRes.statusCode })
   } catch (error) {
     console.error(`[proxyRequest] ${request.method} /api/${apiPath}`, error)
     return NextResponse.json(

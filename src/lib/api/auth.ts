@@ -13,7 +13,7 @@
  */
 import { HTTPError } from 'ky'
 import { api } from './client'
-import type { UserInfo, ApiResponse } from './types'
+import type { UserInfo, ApiResponse } from '@/lib/types'
 
 /**
  * Đăng ký tài khoản mới.

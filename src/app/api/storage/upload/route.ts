@@ -13,7 +13,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { API_BASE } from '@/lib/oauth'
+import { springApi } from '@/lib/api/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,17 +46,12 @@ export async function POST(request: NextRequest) {
       backendForm.append('prefix', prefix)
     }
 
-    const res = await fetch(`${API_BASE}/api/storage/upload`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // Không set Content-Type — fetch tự động set multipart boundary
-      },
+    const res = await springApi.post('storage/upload', {
+      headers: { Authorization: `Bearer ${token}` },
       body: backendForm,
     })
 
-    const json = await res.json()
-    return NextResponse.json(json, { status: res.status })
+    return NextResponse.json(res.body, { status: res.statusCode })
   } catch (error) {
     console.error('[storage/upload]', error)
     return NextResponse.json(

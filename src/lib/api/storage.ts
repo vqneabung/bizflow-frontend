@@ -9,7 +9,7 @@
  *   const imgUrl = await storageApi.getImageUrl(data.objectKey)
  */
 import { api } from './client'
-import type { ApiResponse } from './types'
+import type { ApiResponse } from '@/lib/types'
 
 // ── Response types ──────────────────────────────────────────
 

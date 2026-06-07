@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { usePathname } from '@/i18n/navigation'
 import { navItems } from '@/lib/constants'
 import { logout } from '@/lib/api/auth'
-import type { UserInfo } from '@/lib/api/types'
+import type { UserInfo } from '@/lib/types'
 
 export default function Header({ user }: { user: UserInfo }) {
   const pathname = usePathname()

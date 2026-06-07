@@ -27,7 +27,7 @@ import type {
   CreateProductRequest,
   UpdateProductRequest,
   ApiResponse,
-} from '@/lib/api/product-types'
+} from '@/lib/types'
 
 // ===== Query key factory =====
 

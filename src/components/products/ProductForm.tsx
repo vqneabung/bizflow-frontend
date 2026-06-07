@@ -19,7 +19,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm, type Resolver, type FieldError } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -36,26 +36,28 @@ import {
   type CreateProductFormData,
   type EditProductFormData,
 } from '@/lib/schemas/product-schema'
-/**
- * Props cho ProductForm.
- * - mode: 'create' = tạo mới (required fields); 'edit' = sửa (optional)
- * - defaultValues: optional initial values
- * - existingImageKeys: MinIO objectKeys của ảnh hiện tại (chỉ dùng edit mode)
- * - onSubmit: union type — accept cả create data và edit data
- * - isSubmitting: disable inputs khi đang submit
- * - serverError: error message từ server (hiển thị trên đầu form)
- */
-interface ProductFormProps {
+interface ProductFormBaseProps {
   mode: 'create' | 'edit'
-  defaultValues?: Partial<CreateProductFormData>
-  existingImageKeys?: string[]
-  onSubmit:
-    | ((data: CreateProductFormData) => Promise<void> | void)
-    | ((data: EditProductFormData) => Promise<void> | void)
   isSubmitting: boolean
   serverError?: string | null
   enableBarcodeScanner?: boolean
 }
+
+interface CreateModeProps extends ProductFormBaseProps {
+  mode: 'create'
+  onSubmit: (data: CreateProductFormData) => Promise<void> | void
+  defaultValues?: Partial<CreateProductFormData>
+  existingImageKeys?: never
+}
+
+interface EditModeProps extends ProductFormBaseProps {
+  mode: 'edit'
+  onSubmit: (data: EditProductFormData) => Promise<void> | void
+  defaultValues?: Partial<EditProductFormData>
+  existingImageKeys?: string[]
+}
+
+type ProductFormProps = CreateModeProps | EditModeProps
 
 /** Union type cho form data */
 type FormData = CreateProductFormData | EditProductFormData
@@ -94,7 +96,7 @@ export default function ProductForm({
   const imageUploadRef = useRef<ImageUploadHandle>(null)
 
   // Watch imageKeys để sync với ImageUpload
-  const watchedImageKeys: string[] = (watch as any)('imageKeys') ?? []
+  const watchedImageKeys: string[] = (watch('imageKeys') ?? []) as string[]
 
   // Sticky save bar
   const [showStickyBar, setShowStickyBar] = useState(false)
@@ -119,23 +121,21 @@ export default function ProductForm({
 
   // Field error helper
   function getFieldError(field: string): string | undefined {
-    const err = (errors as any)[field]
-    if (!err) return undefined
-    const key = String(err.message ?? '')
-    if (!key) return undefined
-    const translation = e(key as Parameters<typeof e>[0])
-    return translation !== key ? translation : key
+    const err = (errors as Record<string, FieldError | undefined>)[field]
+    if (!err?.message) return undefined
+    const translation = e(err.message as Parameters<typeof e>[0])
+    return translation !== err.message ? translation : err.message
   }
 
   // Barcode scan handler
   const handleBarcodeScan = (barcode: string) => {
-    (setValue as any)('barcode', barcode, { shouldDirty: true })
+    (setValue as (k: string, v: string, o?: object) => void)('barcode', barcode, { shouldDirty: true })
   }
 
   return (
     <>
       <form
-        onSubmit={handleSubmit(onSubmit as any)}
+        onSubmit={handleSubmit(onSubmit as (data: FormData) => void | Promise<void>)}
         className="max-w-5xl space-y-6 pb-24"
       >
         {serverError && (
@@ -168,8 +168,8 @@ export default function ProductForm({
                 )}
               </div>
               <UnitSelect
-                value={w((watch as any)('primaryUnitId'))}
-                onChange={(val) => (setValue as any)('primaryUnitId', val, { shouldDirty: true })}
+                value={w(watch('primaryUnitId'))}
+                onChange={(val) => (setValue as (k: string, v: string, o?: object) => void)('primaryUnitId', val, { shouldDirty: true })}
                 error={getFieldError('primaryUnitId')}
                 disabled={isSubmitting}
                 required
@@ -179,8 +179,8 @@ export default function ProductForm({
             {/* Row 2: Category + Barcode */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <CategorySelect
-                value={w((watch as any)('categoryId'))}
-                onChange={(val) => (setValue as any)('categoryId', val, { shouldDirty: true })}
+                value={w(watch('categoryId'))}
+                onChange={(val) => (setValue as (k: string, v: string, o?: object) => void)('categoryId', val, { shouldDirty: true })}
                 error={getFieldError('categoryId')}
                 disabled={isSubmitting}
               />
@@ -299,7 +299,7 @@ export default function ProductForm({
               <ImageUpload
                 ref={imageUploadRef}
                 existingImageKeys={watchedImageKeys}
-                onImageKeysChange={(keys) => (setValue as any)('imageKeys', keys, { shouldDirty: true })}
+                onImageKeysChange={(keys) => (setValue as (k: string, v: string[], o?: object) => void)('imageKeys', keys, { shouldDirty: true })}
                 disabled={isSubmitting}
                 error={getFieldError('imageKeys')}
               />

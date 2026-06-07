@@ -7,8 +7,9 @@
  */
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { useProductFilters } from '@/lib/hooks/use-product-filters'
 import { Link } from '@/i18n/navigation'
 import { toast } from 'sonner'
 import ProductTable from '@/components/products/ProductTable'
@@ -20,30 +21,31 @@ import {
   useProductsQuery,
   useDeactivateProductMutation,
 } from '@/lib/query/products'
-import { listCategories } from '@/lib/api/reference'
+import { useCategoriesQuery } from '@/lib/query/reference'
 import { getErrorMessage } from '@/lib/types/error'
-import type { CategoryOption } from '@/components/products/ProductSearchBar'
+import type { CategoryOption } from '@/lib/types'
 
 export default function ProductsPage() {
   const t = useTranslations('products')
   const d = useTranslations('dashboard')
 
   // ===== Filter state (UI only) =====
-  const [search, setSearch] = useState('')
-  const [categoryId, setCategoryId] = useState('')
-  const [page, setPage] = useState(1)
-  const [sortBy, setSortBy] = useState('createdAt')
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const {
+    search,
+    categoryId,
+    page,
+    sortBy,
+    sortDir,
+    handleSort,
+    handleSearchChange,
+    handleCategoryChange,
+    setPage,
+  } = useProductFilters()
+
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
 
   // ===== Categories for filter dropdown =====
-  const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([])
-
-  useEffect(() => {
-    listCategories()
-      .then((cats) => setCategoryOptions(cats.map(c => ({ id: c.id, name: c.name }))))
-      .catch(() => {}) // silently fail — filter just won't show categories
-  }, [])
+  const { data: categories = [] } = useCategoriesQuery()
 
   // ===== Data fetching (TanStack Query) =====
   const {
@@ -63,27 +65,6 @@ export default function ProductsPage() {
 
   // ===== Mutation =====
   const deactivateMutation = useDeactivateProductMutation()
-
-  // ===== Handlers =====
-  const handleSort = (field: string) => {
-    if (field === sortBy) {
-      setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'))
-    } else {
-      setSortBy(field)
-      setSortDir('asc')
-    }
-    setPage(1)
-  }
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value)
-    setPage(1)
-  }
-
-  const handleCategoryChange = (value: string) => {
-    setCategoryId(value)
-    setPage(1)
-  }
 
   const handleDeactivate = async () => {
     if (!deleteTarget) return
@@ -125,7 +106,7 @@ export default function ProductsPage() {
       <ProductSearchBar
         search={search}
         categoryId={categoryId}
-        categories={categoryOptions}
+        categories={categories.map(c => ({ id: c.id, name: c.name }))}
         onSearchChange={handleSearchChange}
         onCategoryChange={handleCategoryChange}
       />

@@ -15,7 +15,7 @@ import type {
   UpdateProductRequest,
   ApiResponse,
   ListProductsParams,
-} from './product-types'
+} from '@/lib/types'
 
 /**
  * Danh sách sản phẩm (phân trang + tìm kiếm + lọc).

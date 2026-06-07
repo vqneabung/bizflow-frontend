@@ -11,7 +11,7 @@
 import type {
   CreateProductRequest,
   UpdateProductRequest,
-} from '@/lib/api/product-types'
+} from '@/lib/types'
 import type {
   CreateProductFormData,
   EditProductFormData,

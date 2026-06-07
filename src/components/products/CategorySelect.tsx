@@ -1,14 +1,12 @@
 /**
  * CategorySelect.tsx — Combobox cho danh mục, tích hợp quick-create.
  *
- * Fetch categories từ API, search + filter, cho phép user tạo category mới inline.
+ * Fetch categories từ API via TanStack Query, search + filter, cho phép user tạo category mới inline.
  */
 'use client'
 
-import { useEffect, useState } from 'react'
 import Combobox from '@/components/ui/combobox'
-import { listCategories, findOrCreateCategory } from '@/lib/api/reference'
-import type { ComboboxItem } from '@/components/ui/combobox'
+import { useCategoriesQuery, useFindOrCreateCategoryMutation } from '@/lib/query/reference'
 
 interface CategorySelectProps {
   value: string
@@ -23,40 +21,13 @@ export default function CategorySelect({
   error,
   disabled = false,
 }: CategorySelectProps) {
-  const [items, setItems] = useState<ComboboxItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const { data: items = [], isPending } = useCategoriesQuery()
+  const createCategoryMutation = useFindOrCreateCategoryMutation()
 
-  // Fetch categories on mount
-  useEffect(() => {
-    let cancelled = false
-    setIsLoading(true)
-
-    listCategories()
-      .then((categories) => {
-        if (!cancelled) {
-          setItems(categories.map(c => ({ id: c.id, name: c.name })))
-        }
-      })
-      .catch(console.error)
-      .finally(() => {
-        if (!cancelled) setIsLoading(false)
-      })
-
-    return () => { cancelled = true }
-  }, [])
-
-  // Quick-create: find-or-create category, then select it
   const handleAddNew = async (name: string) => {
     try {
-      const res = await findOrCreateCategory(name)
-      if (res.data) {
-        const newItem = { id: res.data.id, name: res.data.name }
-        setItems(prev => {
-          if (prev.some(i => i.id === newItem.id)) return prev
-          return [...prev, newItem]
-        })
-        onChange(res.data.id)
-      }
+      const res = await createCategoryMutation.mutateAsync({ name })
+      if (res.data) onChange(res.data.id)
     } catch (err) {
       console.error('Failed to create category:', err)
     }
@@ -64,14 +35,14 @@ export default function CategorySelect({
 
   return (
     <Combobox
-      items={items}
+      items={items.map(c => ({ id: c.id, name: c.name }))}
       value={value}
       onChange={onChange}
       label="Danh mục"
       placeholder="Chọn hoặc nhập danh mục..."
       enableAdd
       onAddNew={handleAddNew}
-      isLoading={isLoading}
+      isLoading={isPending}
       error={error}
       disabled={disabled}
       required={false}

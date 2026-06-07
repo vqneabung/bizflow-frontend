@@ -10,7 +10,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { API_BASE, ACCESS_TOKEN_MAX_AGE } from '@/lib/oauth'
-import type { ApiResponse } from '@/lib/api/types'
+import type { ApiResponse } from '@/lib/types'
 
 /** POST: register → proxy to Spring Boot → set cookie */
 export async function POST(request: NextRequest) {

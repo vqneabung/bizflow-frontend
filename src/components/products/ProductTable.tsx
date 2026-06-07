@@ -13,7 +13,7 @@
 import { useTranslations } from 'next-intl'
 import { ImageOff, Loader2 } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import type { ProductResponse, PaginationMeta } from '@/lib/api/product-types'
+import type { ProductResponse, PaginationMeta } from '@/lib/types'
 import { useImageUrl } from '@/lib/hooks/use-image-url'
 
 /** Format giá VND */

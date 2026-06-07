@@ -10,11 +10,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslations } from 'next-intl'
-
-export interface CategoryOption {
-  id: string
-  name: string
-}
+import type { CategoryOption } from '@/lib/types'
 
 interface ProductSearchBarProps {
   search: string

@@ -11,7 +11,7 @@ import type {
   UnitResponse,
   CategoryResponse,
   ApiResponse,
-} from './product-types'
+} from '@/lib/types'
 
 // ===== Units =====
 
