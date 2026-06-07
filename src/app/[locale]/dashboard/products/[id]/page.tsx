@@ -17,7 +17,7 @@ import {
   useProductQuery,
   useDeactivateProductMutation,
 } from '@/lib/query/products'
-import { getErrorMessage } from '@/lib/types/error'
+import { getErrorMessage } from '@/lib/types'
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)

@@ -22,7 +22,7 @@ import {
   useDeactivateProductMutation,
 } from '@/lib/query/products'
 import { useCategoriesQuery } from '@/lib/query/reference'
-import { getErrorMessage } from '@/lib/types/error'
+import { getErrorMessage } from '@/lib/types'
 import type { CategoryOption } from '@/lib/types'
 
 export default function ProductsPage() {

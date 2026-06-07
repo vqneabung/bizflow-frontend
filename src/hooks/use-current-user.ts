@@ -27,12 +27,11 @@ export async function getCurrentUser(): Promise<UserInfo | null> {
     const token = cookieStore.get('session_token')
     if (!token?.value) return null
 
-    const res = await springApi('auth/me', {
+    const res = await springApi<ApiResponse<UserInfo>>('auth/me', {
       headers: { Authorization: `Bearer ${token.value}` },
     })
 
-    const data = res.body as unknown as ApiResponse<UserInfo>
-    return data.success ? (data.data ?? null) : null
+    return res.body.success ? (res.body.data ?? null) : null
   } catch (err) {
     console.error('[getCurrentUser] Failed:', err)
     return null

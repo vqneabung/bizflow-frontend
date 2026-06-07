@@ -64,16 +64,21 @@ export const editProductFormSchema = createProductFormSchema.partial()
 export type CreateProductFormData = z.infer<typeof createProductFormSchema>
 export type EditProductFormData = z.infer<typeof editProductFormSchema>
 
-/** Default values cho react-hook-form (dùng cho cả create + edit) */
-export const PRODUCT_FORM_DEFAULTS = {
+/**
+ * Default values cho react-hook-form (dùng cho cả create + edit).
+ *
+ * `price` và `costPrice` cố ý KHÔNG default — để trống cho user tự nhập.
+ * Type là `Partial<CreateProductFormData>` thay vì `satisfies CreateProductFormData`
+ * vì schema yêu cầu `price` là positive number, không thể default bằng 0
+ * (sẽ bị zod validation reject) hoặc `as unknown as number` (hack).
+ */
+export const PRODUCT_FORM_DEFAULTS: Partial<CreateProductFormData> = {
   name: '',
   categoryId: '',
   primaryUnitId: '',
-  price: undefined as unknown as number,
-  costPrice: undefined as unknown as number,
   stock: 0,
   minStock: 0,
   imageUrl: '',
-  imageKeys: [] as string[],
+  imageKeys: [],
   barcode: '',
-} satisfies CreateProductFormData
+}

@@ -18,7 +18,7 @@ import ProductForm from '@/components/products/ProductForm'
 import { useCreateProductMutation } from '@/lib/query/products'
 import { toCreateProductRequest } from '@/lib/mappers/product-mapper'
 import type { CreateProductFormData } from '@/lib/schemas/product-schema'
-import { getErrorMessage } from '@/lib/types/error'
+import { getErrorMessage } from '@/lib/types'
 
 export default function CreateProductPage() {
   const t = useTranslations('products')

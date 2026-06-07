@@ -31,7 +31,7 @@ async function refreshAccessToken(
   refreshToken: string,
 ): Promise<{ access: string; refresh?: string } | null> {
   try {
-    const res = await oauthApi.post('oauth2/token', {
+    const res = await oauthApi.post<Record<string, string>>('oauth2/token', {
       form: {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
@@ -45,7 +45,7 @@ async function refreshAccessToken(
       return null
     }
 
-    const tokens = res.body as unknown as Record<string, string>
+    const tokens = res.body
     if (!tokens.access_token) return null
     return {
       access: tokens.access_token,
@@ -78,7 +78,7 @@ async function doForward(
     method: request.method as 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     headers,
     searchParams: request.nextUrl.searchParams,
-    json: body != null ? (body as Record<string, unknown>) : undefined,
+    json: body != null ? body : undefined,
   })
 }
 

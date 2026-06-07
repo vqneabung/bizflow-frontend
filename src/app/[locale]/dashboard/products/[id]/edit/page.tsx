@@ -22,7 +22,7 @@ import {
 } from '@/lib/query/products'
 import { toUpdateProductRequest } from '@/lib/mappers/product-mapper'
 import type { EditProductFormData } from '@/lib/schemas/product-schema'
-import { getErrorMessage } from '@/lib/types/error'
+import { getErrorMessage } from '@/lib/types'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
