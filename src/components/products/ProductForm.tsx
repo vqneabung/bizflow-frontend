@@ -29,6 +29,7 @@ import ImageUpload, { type ImageUploadHandle } from '@/components/ui/image-uploa
 import UnitSelect from '@/components/products/UnitSelect'
 import CategorySelect from '@/components/products/CategorySelect'
 import BarcodeScanner from '@/components/products/BarcodeScanner'
+import { NumericInput } from '@/components/ui/numeric-input'
 import {
   createProductFormSchema,
   editProductFormSchema,
@@ -213,12 +214,11 @@ export default function ProductForm({
                 <Label htmlFor="price">
                   {t('fields.price')} <span className="text-destructive">*</span>
                 </Label>
-                <Input
+                <NumericInput
                   id="price"
-                  type="number"
-                  step="1"
-                  min="1"
-                  {...register('price', { valueAsNumber: true })}
+                  value={watch('price') as number | undefined}
+                  onValueChange={(v) => (setValue as (k: string, v: number | undefined, o?: object) => void)('price', v, { shouldDirty: true, shouldValidate: true })}
+                  min={1}
                   placeholder={t('fields.pricePlaceholder')}
                   disabled={isSubmitting}
                 />
@@ -228,15 +228,11 @@ export default function ProductForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="costPrice">{t('fields.costPrice')}</Label>
-                <Input
+                <NumericInput
                   id="costPrice"
-                  type="number"
-                  step="1"
-                  min="0"
-                  {...register('costPrice', {
-                    valueAsNumber: true,
-                    setValueAs: (v: unknown) => (v === '' ? undefined : parseFloat(v as string)),
-                  })}
+                  value={watch('costPrice') as number | undefined}
+                  onValueChange={(v) => (setValue as (k: string, v: number | undefined, o?: object) => void)('costPrice', v, { shouldDirty: true, shouldValidate: true })}
+                  min={0}
                   placeholder={t('fields.costPricePlaceholder')}
                   disabled={isSubmitting}
                 />
@@ -250,12 +246,11 @@ export default function ProductForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <Label htmlFor="stock">{t('fields.stock')}</Label>
-                <Input
+                <NumericInput
                   id="stock"
-                  type="number"
-                  step="1"
-                  min="0"
-                  {...register('stock', { valueAsNumber: true })}
+                  value={watch('stock') as number | undefined}
+                  onValueChange={(v) => (setValue as (k: string, v: number | undefined, o?: object) => void)('stock', v, { shouldDirty: true, shouldValidate: true })}
+                  min={0}
                   disabled={isSubmitting}
                 />
                 {getFieldError('stock') && (
@@ -264,12 +259,11 @@ export default function ProductForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="minStock">{t('fields.minStock')}</Label>
-                <Input
+                <NumericInput
                   id="minStock"
-                  type="number"
-                  step="1"
-                  min="0"
-                  {...register('minStock', { valueAsNumber: true })}
+                  value={watch('minStock') as number | undefined}
+                  onValueChange={(v) => (setValue as (k: string, v: number | undefined, o?: object) => void)('minStock', v, { shouldDirty: true, shouldValidate: true })}
+                  min={0}
                   disabled={isSubmitting}
                 />
                 {getFieldError('minStock') && (

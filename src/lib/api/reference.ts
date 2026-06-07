@@ -22,16 +22,12 @@ export async function listUnits(): Promise<UnitResponse[]> {
 
 /** Tạo đơn vị tính mới (user-defined). */
 export async function createUnit(name: string, description?: string): Promise<ApiResponse<UnitResponse>> {
-  const params = new URLSearchParams({ name })
-  if (description) params.set('description', description)
-  return api.post(`reference/units`, { body: params }).json<ApiResponse<UnitResponse>>()
+  return api.post('reference/units', { json: { name, description } }).json<ApiResponse<UnitResponse>>()
 }
 
 /** Find-or-create unit. Nếu đã tồn tại (global hoặc user), trả về. Chưa có thì tạo mới. */
 export async function findOrCreateUnit(name: string, description?: string): Promise<ApiResponse<UnitResponse>> {
-  const params = new URLSearchParams({ name })
-  if (description) params.set('description', description)
-  return api.post(`reference/units/find-or-create`, { body: params }).json<ApiResponse<UnitResponse>>()
+  return api.post('reference/units/find-or-create', { json: { name, description } }).json<ApiResponse<UnitResponse>>()
 }
 
 // ===== Categories =====
@@ -43,14 +39,10 @@ export async function listCategories(): Promise<CategoryResponse[]> {
 
 /** Tạo danh mục mới (user-defined). */
 export async function createCategory(name: string, description?: string): Promise<ApiResponse<CategoryResponse>> {
-  const params = new URLSearchParams({ name })
-  if (description) params.set('description', description)
-  return api.post(`reference/categories`, { body: params }).json<ApiResponse<CategoryResponse>>()
+  return api.post('reference/categories', { json: { name, description } }).json<ApiResponse<CategoryResponse>>()
 }
 
 /** Find-or-create category. */
 export async function findOrCreateCategory(name: string, description?: string): Promise<ApiResponse<CategoryResponse>> {
-  const params = new URLSearchParams({ name })
-  if (description) params.set('description', description)
-  return api.post(`reference/categories/find-or-create`, { body: params }).json<ApiResponse<CategoryResponse>>()
+  return api.post('reference/categories/find-or-create', { json: { name, description } }).json<ApiResponse<CategoryResponse>>()
 }
