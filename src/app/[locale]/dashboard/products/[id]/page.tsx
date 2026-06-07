@@ -9,6 +9,8 @@
 import { useState, use } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import ProductDeleteDialog from '@/components/products/ProductDeleteDialog'
 import { ProductDetailSkeleton } from '@/components/products/ProductSkeleton'
@@ -70,16 +72,27 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="max-w-2xl space-y-6">
-      {/* Breadcrumb */}
-      <div>
-        <nav className="text-xs text-zinc-400 mb-1">
-          <Link href="/dashboard" className="hover:text-zinc-600">{d('title')}</Link>
-          <span className="mx-1">/</span>
-          <Link href="/dashboard/products" className="hover:text-zinc-600">{t('title')}</Link>
-          <span className="mx-1">/</span>
-          <span className="text-zinc-700 font-medium">{product.name}</span>
-        </nav>
-        <h2 className="text-lg font-semibold text-zinc-900">{t('detail')}</h2>
+      {/* Header with back button + breadcrumb */}
+      <div className="flex items-start gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="mt-0.5 shrink-0"
+          onClick={() => router.back()}
+          aria-label="Quay lại"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div>
+          <nav className="text-xs text-muted-foreground mb-0.5">
+            <Link href="/dashboard" className="hover:text-foreground transition-colors">{d('title')}</Link>
+            <span className="mx-1">/</span>
+            <Link href="/dashboard/products" className="hover:text-foreground transition-colors">{t('title')}</Link>
+            <span className="mx-1">/</span>
+            <span className="font-medium text-foreground">{product.name}</span>
+          </nav>
+          <h1 className="text-xl font-semibold text-foreground">{t('detail')}</h1>
+        </div>
       </div>
 
       {/* Detail card */}

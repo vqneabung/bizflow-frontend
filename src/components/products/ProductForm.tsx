@@ -20,6 +20,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useForm, type Resolver, type FieldError } from 'react-hook-form'
+import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -95,6 +97,7 @@ export default function ProductForm({
   })
 
   const imageUploadRef = useRef<ImageUploadHandle>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   // Watch imageKeys để sync với ImageUpload
   const watchedImageKeys: string[] = (watch('imageKeys') ?? []) as string[]
@@ -136,7 +139,26 @@ export default function ProductForm({
   return (
     <>
       <form
-        onSubmit={handleSubmit(onSubmit as (data: FormData) => void | Promise<void>)}
+        onSubmit={handleSubmit(async (data: FormData) => {
+          // Step 1: Upload ảnh pending lên MinIO trước
+          let finalImageKeys = (data.imageKeys ?? []) as string[]
+          if (imageUploadRef.current) {
+            setIsUploading(true)
+            try {
+              finalImageKeys = await imageUploadRef.current.uploadAll()
+            } catch (err: unknown) {
+              toast.error(getErrorMessage(err, e('uploadError')))
+              setIsUploading(false)
+              throw err
+            }
+            setIsUploading(false)
+          }
+          // Step 2: Gọi parent's onSubmit với imageKeys đã upload
+          await (onSubmit as (d: FormData) => Promise<void> | void)({
+            ...data,
+            imageKeys: finalImageKeys,
+          } as FormData)
+        })}
         className="max-w-5xl space-y-6 pb-24"
       >
         {serverError && (
@@ -304,9 +326,9 @@ export default function ProductForm({
         {/* Inline submit */}
         <div ref={formBottomRef}>
           <div className="flex items-center gap-3">
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? a('creating') : a('save')}
-            </Button>
+              <Button type="submit" disabled={isSubmitting || isUploading}>
+                {isUploading ? 'Đang upload ảnh...' : isSubmitting ? a('creating') : a('save')}
+              </Button>
             {mode === 'edit' && (
               <span className="text-xs text-muted-foreground">
                 Chỉ gửi các trường đã thay đổi
@@ -327,13 +349,13 @@ export default function ProductForm({
               {isDirty && (
                 <span className="text-xs text-amber-600">Chưa lưu</span>
               )}
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                onClick={() => document.querySelector('form')?.requestSubmit()}
-              >
-                {isSubmitting ? a('creating') : a('save')}
-              </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || isUploading}
+                  onClick={() => document.querySelector('form')?.requestSubmit()}
+                >
+                  {isUploading ? 'Đang upload ảnh...' : isSubmitting ? a('creating') : a('save')}
+                </Button>
             </div>
           </div>
         </div>
