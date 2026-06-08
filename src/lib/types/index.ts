@@ -12,6 +12,7 @@ export type {
   CreateStockImportItemRequest,
   ListStockImportsParams,
 } from './api/stock-import'
+export type { Order, OrderSummary, OrderItem, CreateOrderRequest, CreateOrderItemRequest, OrderStatus } from './api/order'
 
 // Domain types
 export type { AppError } from './domain/error'

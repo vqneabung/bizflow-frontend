@@ -388,6 +388,71 @@
     }
   },
 
+  "orders": {
+    "title": "Orders",
+    "subtitle": "Manage at-counter sales orders",
+    "create": "Create order",
+    "detail": "Order details",
+    "fields": {
+      "referenceNumber": "Reference",
+      "customer": "Customer",
+      "customerPlaceholder": "Select customer...",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes about this order...",
+      "items": "Items",
+      "product": "Product",
+      "productPlaceholder": "Select product...",
+      "quantity": "Quantity",
+      "unitPrice": "Unit price",
+      "subtotal": "Subtotal",
+      "totalAmount": "Total"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled"
+    },
+    "table": {
+      "referenceNumber": "Reference",
+      "customer": "Customer",
+      "totalAmount": "Total",
+      "status": "Status",
+      "itemCount": "Qty",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "saveDraft": "Save draft",
+      "confirm": "Confirm & deduct stock",
+      "cancel": "Cancel order",
+      "cancelling": "Cancelling...",
+      "addItem": "Add item",
+      "removeItem": "Remove"
+    },
+    "toast": {
+      "created": "Created order {referenceNumber}",
+      "cancelled": "Cancelled order {referenceNumber}",
+      "error": "An error occurred"
+    },
+    "errors": {
+      "loadFailed": "Failed to load orders",
+      "loadFailedAction": "Retry",
+      "notFound": "Order not found",
+      "atLeastOneItem": "At least one item is required",
+      "insufficientStock": "Insufficient stock for {product}",
+      "quantityRequired": "Quantity must be > 0",
+      "unitPriceRequired": "Unit price must be > 0",
+      "cannotCancel": "Cannot cancel this order",
+      "confirmError": "Could not confirm order"
+    },
+    "empty": {
+      "title": "No orders yet",
+      "description": "Create your first order to start selling.",
+      "action": "Create order"
+    }
+  },
+
   "nav": {
     "home": "Dashboard",
     "profile": "Profile",

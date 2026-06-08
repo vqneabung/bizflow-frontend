@@ -388,6 +388,71 @@
     }
   },
 
+  "orders": {
+    "title": "Đơn hàng",
+    "subtitle": "Quản lý đơn hàng bán tại quầy",
+    "create": "Tạo đơn hàng",
+    "detail": "Chi tiết đơn hàng",
+    "fields": {
+      "referenceNumber": "Mã đơn",
+      "customer": "Khách hàng",
+      "customerPlaceholder": "Chọn khách hàng...",
+      "notes": "Ghi chú",
+      "notesPlaceholder": "Ghi chú về đơn hàng...",
+      "items": "Sản phẩm",
+      "product": "Sản phẩm",
+      "productPlaceholder": "Chọn sản phẩm...",
+      "quantity": "Số lượng",
+      "unitPrice": "Đơn giá",
+      "subtotal": "Thành tiền",
+      "totalAmount": "Tổng cộng"
+    },
+    "status": {
+      "DRAFT": "Nháp",
+      "CONFIRMED": "Đã xác nhận",
+      "CANCELLED": "Đã hủy"
+    },
+    "table": {
+      "referenceNumber": "Mã đơn",
+      "customer": "Khách hàng",
+      "totalAmount": "Tổng tiền",
+      "status": "Trạng thái",
+      "itemCount": "SL",
+      "date": "Ngày tạo",
+      "actions": "Thao tác"
+    },
+    "actions": {
+      "view": "Xem",
+      "saveDraft": "Lưu nháp",
+      "confirm": "Xác nhận & trừ kho",
+      "cancel": "Hủy đơn",
+      "cancelling": "Đang hủy...",
+      "addItem": "Thêm sản phẩm",
+      "removeItem": "Xóa"
+    },
+    "toast": {
+      "created": "Đã tạo đơn hàng {referenceNumber}",
+      "cancelled": "Đã hủy đơn hàng {referenceNumber}",
+      "error": "Có lỗi xảy ra"
+    },
+    "errors": {
+      "loadFailed": "Không thể tải đơn hàng",
+      "loadFailedAction": "Thử lại",
+      "notFound": "Không tìm thấy đơn hàng",
+      "atLeastOneItem": "Cần ít nhất 1 sản phẩm",
+      "insufficientStock": "Không đủ tồn kho cho {product}",
+      "quantityRequired": "Số lượng phải > 0",
+      "unitPriceRequired": "Đơn giá phải > 0",
+      "cannotCancel": "Không thể hủy đơn hàng này",
+      "confirmError": "Không thể xác nhận đơn hàng"
+    },
+    "empty": {
+      "title": "Chưa có đơn hàng nào",
+      "description": "Tạo đơn hàng đầu tiên để bắt đầu bán hàng.",
+      "action": "Tạo đơn hàng"
+    }
+  },
+
   "nav": {
     "home": "Tổng quan",
     "profile": "Hồ sơ",
