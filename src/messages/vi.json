@@ -332,11 +332,68 @@
     }
   },
 
+  "stockImports": {
+    "title": "Nhập kho",
+    "subtitle": "Quản lý phiếu nhập kho",
+    "create": "Tạo phiếu nhập",
+    "detail": "Chi tiết phiếu nhập",
+    "fields": {
+      "referenceNumber": "Số tham chiếu",
+      "referenceNumberPlaceholder": "VD: NK-20260608-001 (để trống tự sinh)",
+      "supplier": "Nhà cung cấp",
+      "supplierPlaceholder": "VD: Công ty X",
+      "notes": "Ghi chú",
+      "notesPlaceholder": "Ghi chú về phiếu nhập...",
+      "importDate": "Ngày nhập",
+      "items": "Danh sách sản phẩm",
+      "product": "Sản phẩm",
+      "productPlaceholder": "Chọn sản phẩm...",
+      "quantity": "Số lượng",
+      "unitCost": "Đơn giá nhập",
+      "subtotal": "Thành tiền",
+      "totalCost": "Tổng giá trị nhập"
+    },
+    "table": {
+      "referenceNumber": "Số tham chiếu",
+      "supplier": "Nhà cung cấp",
+      "importDate": "Ngày nhập",
+      "totalCost": "Tổng giá trị",
+      "itemCount": "Số mặt hàng",
+      "actions": "Thao tác"
+    },
+    "actions": {
+      "view": "Xem",
+      "save": "Lưu",
+      "saving": "Đang lưu...",
+      "addItem": "Thêm sản phẩm",
+      "removeItem": "Xoá"
+    },
+    "toast": {
+      "created": "Đã tạo phiếu nhập kho {referenceNumber}",
+      "error": "Có lỗi xảy ra"
+    },
+    "errors": {
+      "loadFailed": "Không thể tải danh sách phiếu nhập",
+      "loadFailedAction": "Thử lại",
+      "notFound": "Không tìm thấy phiếu nhập",
+      "atLeastOneItem": "Phải có ít nhất 1 sản phẩm",
+      "productRequired": "Vui lòng chọn sản phẩm",
+      "quantityRequired": "Số lượng phải > 0",
+      "unitCostRequired": "Đơn giá phải > 0"
+    },
+    "empty": {
+      "title": "Chưa có phiếu nhập nào",
+      "description": "Tạo phiếu nhập kho đầu tiên để ghi nhận hàng nhập về.",
+      "action": "Tạo phiếu nhập"
+    }
+  },
+
   "nav": {
     "home": "Tổng quan",
     "profile": "Hồ sơ",
     "products": "Sản phẩm",
     "customers": "Khách hàng",
+    "stockImports": "Nhập kho",
     "orders": "Đơn hàng",
     "reports": "Báo cáo"
   }

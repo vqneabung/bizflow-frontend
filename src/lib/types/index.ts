@@ -4,6 +4,14 @@ export type { UserInfo, RegisterRequest } from './api/user'
 export type { ProductResponse, CreateProductRequest, UpdateProductRequest, ListProductsParams } from './api/product'
 export type { CustomerResponse, CreateCustomerRequest, UpdateCustomerRequest, ListCustomersParams } from './api/customer'
 export type { UnitResponse, CategoryResponse, CategoryOption } from './api/reference'
+export type {
+  StockImportSummaryResponse,
+  StockImportResponse,
+  StockImportItemResponse,
+  CreateStockImportRequest,
+  CreateStockImportItemRequest,
+  ListStockImportsParams,
+} from './api/stock-import'
 
 // Domain types
 export type { AppError } from './domain/error'

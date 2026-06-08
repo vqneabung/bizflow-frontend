@@ -332,11 +332,68 @@
     }
   },
 
+  "stockImports": {
+    "title": "Stock Imports",
+    "subtitle": "Manage stock import records",
+    "create": "Create stock import",
+    "detail": "Stock import details",
+    "fields": {
+      "referenceNumber": "Reference number",
+      "referenceNumberPlaceholder": "E.g. NK-20260608-001 (leave blank for auto)",
+      "supplier": "Supplier",
+      "supplierPlaceholder": "E.g. Company X",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes about this import...",
+      "importDate": "Import date",
+      "items": "Items",
+      "product": "Product",
+      "productPlaceholder": "Select product...",
+      "quantity": "Quantity",
+      "unitCost": "Unit cost",
+      "subtotal": "Subtotal",
+      "totalCost": "Total cost"
+    },
+    "table": {
+      "referenceNumber": "Reference",
+      "supplier": "Supplier",
+      "importDate": "Date",
+      "totalCost": "Total",
+      "itemCount": "Items",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "save": "Save",
+      "saving": "Saving...",
+      "addItem": "Add item",
+      "removeItem": "Remove"
+    },
+    "toast": {
+      "created": "Created stock import {referenceNumber}",
+      "error": "An error occurred"
+    },
+    "errors": {
+      "loadFailed": "Failed to load stock imports",
+      "loadFailedAction": "Retry",
+      "notFound": "Stock import not found",
+      "atLeastOneItem": "At least one item is required",
+      "productRequired": "Please select a product",
+      "quantityRequired": "Quantity must be > 0",
+      "unitCostRequired": "Unit cost must be > 0"
+    },
+    "empty": {
+      "title": "No stock imports yet",
+      "description": "Create your first stock import to record incoming inventory.",
+      "action": "Create stock import"
+    }
+  },
+
   "nav": {
     "home": "Dashboard",
     "profile": "Profile",
     "products": "Products",
     "customers": "Customers",
+    "stockImports": "Stock Imports",
     "orders": "Orders",
     "reports": "Reports"
   }
