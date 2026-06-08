@@ -11,7 +11,7 @@ export const navItems = [
   { key: 'home', href: '/dashboard', icon: '📊' },
   { key: 'profile', href: '/dashboard/profile', icon: '👤' },
   { key: 'products', href: '/dashboard/products', icon: '📦' },
-  { key: 'customers', href: '#', icon: '👥' },
+  { key: 'customers', href: '/dashboard/customers', icon: '👥' },
   { key: 'orders', href: '#', icon: '🛒' },
   { key: 'reports', href: '#', icon: '📈' },
 ] as const

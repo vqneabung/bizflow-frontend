@@ -272,6 +272,66 @@
     }
   },
 
+  "customers": {
+    "title": "Customers",
+    "subtitle": "Manage your customer list",
+    "create": "Add customer",
+    "edit": "Edit customer",
+    "detail": "Customer details",
+    "search": "Search customers...",
+    "fields": {
+      "name": "Customer name",
+      "namePlaceholder": "E.g. John Doe",
+      "phone": "Phone",
+      "phonePlaceholder": "E.g. 0901234567",
+      "email": "Email",
+      "emailPlaceholder": "E.g. customer@email.com",
+      "address": "Address",
+      "addressPlaceholder": "E.g. 123 Main St",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes about this customer..."
+    },
+    "table": {
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "debt": "Debt",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "deactivate": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving..."
+    },
+    "confirm": {
+      "deactivateTitle": "Delete customer?",
+      "deactivateMessage": "Customer \"{name}\" will be hidden from the list. You can still view it later.",
+      "deactivateConfirm": "Confirm delete",
+      "cancel": "Keep"
+    },
+    "toast": {
+      "created": "Created customer {name}",
+      "updated": "Updated customer {name}",
+      "deactivated": "Deleted customer {name}",
+      "error": "An error occurred",
+      "conflict": "Data was modified by another user. Please reload the page."
+    },
+    "errors": {
+      "loadFailed": "Failed to load customers",
+      "loadFailedAction": "Retry",
+      "notFound": "Customer not found",
+      "nameRequired": "Customer name is required"
+    },
+    "empty": {
+      "title": "No customers yet",
+      "description": "Add your first customer to start tracking debt and purchase history.",
+      "action": "Add customer"
+    }
+  },
+
   "nav": {
     "home": "Dashboard",
     "profile": "Profile",

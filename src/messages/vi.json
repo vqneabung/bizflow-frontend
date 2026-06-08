@@ -272,6 +272,66 @@
     }
   },
 
+  "customers": {
+    "title": "Khách hàng",
+    "subtitle": "Quản lý danh sách khách hàng",
+    "create": "Thêm khách hàng",
+    "edit": "Sửa thông tin",
+    "detail": "Chi tiết khách hàng",
+    "search": "Tìm kiếm khách hàng...",
+    "fields": {
+      "name": "Tên khách hàng",
+      "namePlaceholder": "VD: Nguyễn Văn A",
+      "phone": "Số điện thoại",
+      "phonePlaceholder": "VD: 0901234567",
+      "email": "Email",
+      "emailPlaceholder": "VD: khachhang@email.com",
+      "address": "Địa chỉ",
+      "addressPlaceholder": "VD: 123 Đường Lê Lợi, Quận 1",
+      "notes": "Ghi chú",
+      "notesPlaceholder": "Ghi chú về khách hàng..."
+    },
+    "table": {
+      "name": "Tên khách hàng",
+      "phone": "Số điện thoại",
+      "email": "Email",
+      "debt": "Công nợ",
+      "actions": "Thao tác"
+    },
+    "actions": {
+      "view": "Xem",
+      "edit": "Sửa",
+      "deactivate": "Xoá",
+      "cancel": "Huỷ",
+      "save": "Lưu",
+      "saving": "Đang lưu..."
+    },
+    "confirm": {
+      "deactivateTitle": "Xoá khách hàng?",
+      "deactivateMessage": "Khách hàng \"{name}\" sẽ bị ẩn khỏi danh sách. Bạn vẫn có thể xem lại sau.",
+      "deactivateConfirm": "Xác nhận xoá",
+      "cancel": "Giữ lại"
+    },
+    "toast": {
+      "created": "Đã tạo khách hàng {name}",
+      "updated": "Đã cập nhật thông tin {name}",
+      "deactivated": "Đã xoá khách hàng {name}",
+      "error": "Có lỗi xảy ra",
+      "conflict": "Thông tin đã bị sửa bởi người khác. Vui lòng tải lại trang."
+    },
+    "errors": {
+      "loadFailed": "Không thể tải danh sách khách hàng",
+      "loadFailedAction": "Thử lại",
+      "notFound": "Không tìm thấy khách hàng",
+      "nameRequired": "Tên khách hàng là bắt buộc"
+    },
+    "empty": {
+      "title": "Chưa có khách hàng nào",
+      "description": "Thêm khách hàng đầu tiên để bắt đầu quản lý công nợ và theo dõi lịch sử mua hàng.",
+      "action": "Thêm khách hàng"
+    }
+  },
+
   "nav": {
     "home": "Tổng quan",
     "profile": "Hồ sơ",
