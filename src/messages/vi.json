@@ -204,6 +204,7 @@
       "imageUrlPlaceholder": "https://example.com/hinh-anh.jpg",
       "barcode": "Mã vạch",
       "barcodePlaceholder": "8934567890123",
+      "images": "Hình ảnh",
       "isActive": "Đang bán"
     },
 

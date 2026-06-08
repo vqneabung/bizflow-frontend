@@ -153,7 +153,6 @@ export default function ProductForm({
             }
             setIsUploading(false)
           }
-          // Step 2: Gọi parent's onSubmit với imageKeys đã upload
           await (onSubmit as (d: FormData) => Promise<void> | void)({
             ...data,
             imageKeys: finalImageKeys,

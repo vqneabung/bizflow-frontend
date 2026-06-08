@@ -204,6 +204,7 @@
       "imageUrlPlaceholder": "https://example.com/image.jpg",
       "barcode": "Barcode",
       "barcodePlaceholder": "8934567890123",
+      "images": "Images",
       "isActive": "Active"
     },
 

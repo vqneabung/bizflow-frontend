@@ -213,16 +213,24 @@ const ImageUpload = forwardRef<ImageUploadHandle, ImageUploadProps>(function Ima
 
     const newObjectKeys: string[] = []
     let hasError = false
+    const uploadedMap = new Map<string, string>() // localId → objectKey
+
+    for (const r of results) {
+      if (r.status === 'fulfilled') {
+        newObjectKeys.push(r.value.objectKey)
+        uploadedMap.set(r.value.localId, r.value.objectKey)
+      } else {
+        hasError = true
+      }
+    }
+
+    // Update UI state only (React batches async; do NOT compute return values here)
     setPendingFiles((prev) =>
       prev.map((p) => {
-        const result = results.find(
-          (r) => r.status === 'fulfilled' && r.value.localId === p.localId,
-        )
-        if (result && result.status === 'fulfilled') {
-          newObjectKeys.push(result.value.objectKey)
-          return { ...p, status: 'uploaded' as const, objectKey: result.value.objectKey }
+        const objectKey = uploadedMap.get(p.localId)
+        if (objectKey) {
+          return { ...p, status: 'uploaded' as const, objectKey }
         }
-        hasError = true
         return { ...p, status: 'error' as const, error: 'Upload failed' }
       }),
     )
