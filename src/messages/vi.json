@@ -453,6 +453,37 @@
     }
   },
 
+  "reports": {
+    "title": "Báo cáo",
+    "subtitle": "Thống kê tổng quan cửa hàng",
+    "overview": {
+      "totalProducts": "Tổng SP",
+      "ordersThisMonth": "Đơn tháng này",
+      "revenueThisMonth": "Doanh thu tháng",
+      "totalCustomers": "Tổng KH",
+      "lowStock": "Sắp hết hàng"
+    },
+    "revenue": {
+      "title": "Doanh thu",
+      "total": "Tổng doanh thu"
+    },
+    "bestSelling": {
+      "title": "SP bán chạy"
+    },
+    "inventory": {
+      "title": "Tồn kho",
+      "totalProducts": "Tổng SP",
+      "totalValue": "Giá trị tồn",
+      "lowStock": "Hàng sắp hết"
+    },
+    "debt": {
+      "title": "Công nợ",
+      "totalDebt": "Tổng nợ",
+      "customer": "Khách hàng",
+      "orders": "Đơn",
+      "amount": "Số nợ"
+    }
+  },
   "nav": {
     "home": "Tổng quan",
     "profile": "Hồ sơ",

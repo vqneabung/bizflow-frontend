@@ -453,6 +453,37 @@
     }
   },
 
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Store analytics and statistics",
+    "overview": {
+      "totalProducts": "Total Products",
+      "ordersThisMonth": "Orders This Month",
+      "revenueThisMonth": "Revenue This Month",
+      "totalCustomers": "Total Customers",
+      "lowStock": "Low Stock"
+    },
+    "revenue": {
+      "title": "Revenue",
+      "total": "Total Revenue"
+    },
+    "bestSelling": {
+      "title": "Best Selling"
+    },
+    "inventory": {
+      "title": "Inventory",
+      "totalProducts": "Total Products",
+      "totalValue": "Inventory Value",
+      "lowStock": "Low Stock Items"
+    },
+    "debt": {
+      "title": "Debt",
+      "totalDebt": "Total Debt",
+      "customer": "Customer",
+      "orders": "Orders",
+      "amount": "Amount"
+    }
+  },
   "nav": {
     "home": "Dashboard",
     "profile": "Profile",
