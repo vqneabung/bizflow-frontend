@@ -33,6 +33,10 @@
     "theme": {
       "vi": "Tiếng Việt",
       "en": "English"
+    },
+    "errors": {
+      "createCategory": "Không thể tạo danh mục. Vui lòng thử lại.",
+      "createUnit": "Không thể tạo đơn vị tính. Vui lòng thử lại."
     }
   },
 
@@ -339,6 +343,27 @@
       "title": "Chưa có khách hàng nào",
       "description": "Thêm khách hàng đầu tiên để bắt đầu quản lý công nợ và theo dõi lịch sử mua hàng.",
       "action": "Thêm khách hàng"
+    },
+    "tabs": {
+      "info": "Thông tin",
+      "orders": "Lịch sử mua hàng"
+    },
+    "purchaseHistory": {
+      "empty": "Khách hàng chưa có đơn hàng nào.",
+      "loadFailed": "Không thể tải lịch sử mua hàng",
+      "table": {
+        "reference": "Mã đơn",
+        "total": "Tổng tiền",
+        "debt": "Công nợ",
+        "status": "Trạng thái",
+        "date": "Ngày tạo",
+        "actions": "Thao tác"
+      },
+      "pagination": {
+        "summary": "Hiển thị {from}-{to} trên tổng {total}",
+        "prev": "Trước",
+        "next": "Sau"
+      }
     }
   },
 
@@ -438,7 +463,29 @@
       "cancel": "Hủy đơn",
       "cancelling": "Đang hủy...",
       "addItem": "Thêm sản phẩm",
-      "removeItem": "Xóa"
+      "removeItem": "Xóa",
+      "print": "In hóa đơn"
+    },
+    "print": {
+      "title": "Hóa đơn bán hàng",
+      "storeName": "BIZFLOW STORE",
+      "storeAddress": "Địa chỉ: 123 Nguyễn Văn A, Quận 1, TP.HCM",
+      "storeContact": "SĐT: 0901234567",
+      "referenceNumber": "Số HĐ",
+      "date": "Ngày",
+      "customer": "Khách hàng",
+      "totalAmount": "Tổng cộng",
+      "paidAmount": "Đã thanh toán",
+      "debtAmount": "Còn nợ",
+      "notes": "Ghi chú",
+      "thanks": "Cảm ơn quý khách!",
+      "poweredBy": "Powered by Bizflow",
+      "items": {
+        "product": "Sản phẩm",
+        "quantity": "SL",
+        "unitPrice": "Đơn giá",
+        "subtotal": "Thành tiền"
+      }
     },
     "toast": {
       "created": "Đã tạo đơn hàng {referenceNumber}",

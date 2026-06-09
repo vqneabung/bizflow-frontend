@@ -16,6 +16,7 @@ import {
   createCustomer,
   updateCustomer,
   deactivateCustomer,
+  getCustomerOrders,
 } from '@/lib/api/customers'
 import type {
   ListCustomersParams,
@@ -24,6 +25,7 @@ import type {
   CreateCustomerRequest,
   UpdateCustomerRequest,
   ApiResponse,
+  OrderSummary,
 } from '@/lib/types'
 
 // ===== Query key factory =====
@@ -34,6 +36,7 @@ export const customerKeys = {
   list: (params: ListCustomersParams) => [...customerKeys.lists(), params] as const,
   details: () => [...customerKeys.all, 'detail'] as const,
   detail: (id: string) => [...customerKeys.details(), id] as const,
+  orders: (id: string) => [...customerKeys.details(), id, 'orders'] as const,
 }
 
 // ===== Query hooks =====
@@ -64,6 +67,23 @@ export function useCustomerQuery(
   return useQuery({
     queryKey: customerKeys.detail(id),
     queryFn: () => getCustomer(id),
+    enabled: !!id,
+    ...options,
+  })
+}
+
+/** Hook: lịch sử mua hàng của 1 customer (FR-17) */
+export function useCustomerOrdersQuery(
+  id: string,
+  params: { page?: number; size?: number } = {},
+  options?: Omit<
+    UseQueryOptions<PaginationResponse<OrderSummary>>,
+    'queryKey' | 'queryFn' | 'enabled'
+  >,
+) {
+  return useQuery({
+    queryKey: [...customerKeys.orders(id), params],
+    queryFn: () => getCustomerOrders(id, params),
     enabled: !!id,
     ...options,
   })

@@ -7,6 +7,8 @@
 
 import Combobox from '@/components/ui/combobox'
 import { useUnitsQuery, useFindOrCreateUnitMutation } from '@/lib/query/reference'
+import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 interface UnitSelectProps {
   value: string
@@ -25,13 +27,14 @@ export default function UnitSelect({
 }: UnitSelectProps) {
   const { data: items = [], isPending } = useUnitsQuery()
   const createUnitMutation = useFindOrCreateUnitMutation()
+  const t = useTranslations('common')
 
   const handleAddNew = async (name: string) => {
     try {
       const res = await createUnitMutation.mutateAsync({ name })
       if (res.data) onChange(res.data.id)
-    } catch (err) {
-      console.error('Failed to create unit:', err)
+    } catch {
+      toast.error(t('errors.createUnit'))
     }
   }
 

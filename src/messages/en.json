@@ -33,6 +33,10 @@
     "theme": {
       "vi": "Tiếng Việt",
       "en": "English"
+    },
+    "errors": {
+      "createCategory": "Cannot create category. Please try again.",
+      "createUnit": "Cannot create unit. Please try again."
     }
   },
 
@@ -339,6 +343,27 @@
       "title": "No customers yet",
       "description": "Add your first customer to start tracking debt and purchase history.",
       "action": "Add customer"
+    },
+    "tabs": {
+      "info": "Information",
+      "orders": "Purchase history"
+    },
+    "purchaseHistory": {
+      "empty": "This customer has no orders yet.",
+      "loadFailed": "Failed to load purchase history",
+      "table": {
+        "reference": "Reference",
+        "total": "Total",
+        "debt": "Debt",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "summary": "Showing {from}-{to} of {total}",
+        "prev": "Previous",
+        "next": "Next"
+      }
     }
   },
 
@@ -438,7 +463,29 @@
       "cancel": "Cancel order",
       "cancelling": "Cancelling...",
       "addItem": "Add item",
-      "removeItem": "Remove"
+      "removeItem": "Remove",
+      "print": "Print invoice"
+    },
+    "print": {
+      "title": "Sales Invoice",
+      "storeName": "BIZFLOW STORE",
+      "storeAddress": "Address: 123 Nguyen Van A, District 1, HCMC",
+      "storeContact": "Phone: 0901234567",
+      "referenceNumber": "Invoice #",
+      "date": "Date",
+      "customer": "Customer",
+      "totalAmount": "Total",
+      "paidAmount": "Paid",
+      "debtAmount": "Debt",
+      "notes": "Notes",
+      "thanks": "Thank you for your purchase!",
+      "poweredBy": "Powered by Bizflow",
+      "items": {
+        "product": "Product",
+        "quantity": "Qty",
+        "unitPrice": "Unit price",
+        "subtotal": "Subtotal"
+      }
     },
     "toast": {
       "created": "Created order {referenceNumber}",

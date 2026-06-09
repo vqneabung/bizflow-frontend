@@ -5,17 +5,21 @@ import { Link } from '@/i18n/navigation'
 import { notFound } from 'next/navigation'
 import { useCustomerQuery, useDeactivateCustomerMutation } from '@/lib/query/customers'
 import { CustomerDetailSkeleton } from '@/components/customers/CustomerSkeleton'
+import CustomerOrders from '@/components/customers/CustomerOrders'
 import { getErrorMessage } from '@/lib/types'
 import { toast } from 'sonner'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import CustomerDeleteDialog from '@/components/customers/CustomerDeleteDialog'
 
+type Tab = 'info' | 'orders'
+
 export default function CustomerDetailPage() {
   const t = useTranslations('customers')
   const d = useTranslations('dashboard')
   const params = useParams()
   const id = params.id as string
+  const [tab, setTab] = useState<Tab>('info')
 
   const { data: res, isPending, isError, error } = useCustomerQuery(id)
   const deactivateMutation = useDeactivateCustomerMutation()
@@ -89,25 +93,53 @@ export default function CustomerDetailPage() {
         </div>
       </div>
 
-      {/* Detail card */}
-      <div className="bg-white rounded-2xl border border-zinc-200 p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <p className="text-xs text-zinc-400 mb-1">{t('fields.phone')}</p>
-          <p className="text-sm font-medium text-zinc-900">{customer.phone || '—'}</p>
-        </div>
-        <div>
-          <p className="text-xs text-zinc-400 mb-1">{t('fields.email')}</p>
-          <p className="text-sm font-medium text-zinc-900">{customer.email || '—'}</p>
-        </div>
-        <div className="md:col-span-2">
-          <p className="text-xs text-zinc-400 mb-1">{t('fields.address')}</p>
-          <p className="text-sm font-medium text-zinc-900">{customer.address || '—'}</p>
-        </div>
-        <div className="md:col-span-2">
-          <p className="text-xs text-zinc-400 mb-1">{t('fields.notes')}</p>
-          <p className="text-sm text-zinc-700 whitespace-pre-wrap">{customer.notes || '—'}</p>
-        </div>
+      {/* Tabs */}
+      <div className="border-b border-zinc-200 flex gap-6">
+        <button
+          onClick={() => setTab('info')}
+          className={`pb-3 text-sm font-medium transition-colors ${
+            tab === 'info'
+              ? 'text-brand-600 border-b-2 border-brand-600'
+              : 'text-zinc-500 hover:text-zinc-700'
+          }`}
+        >
+          {t('tabs.info')}
+        </button>
+        <button
+          onClick={() => setTab('orders')}
+          className={`pb-3 text-sm font-medium transition-colors ${
+            tab === 'orders'
+              ? 'text-brand-600 border-b-2 border-brand-600'
+              : 'text-zinc-500 hover:text-zinc-700'
+          }`}
+        >
+          {t('tabs.orders')}
+        </button>
       </div>
+
+      {/* Tab content */}
+      {tab === 'info' ? (
+        <div className="bg-white rounded-2xl border border-zinc-200 p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-xs text-zinc-400 mb-1">{t('fields.phone')}</p>
+            <p className="text-sm font-medium text-zinc-900">{customer.phone || '—'}</p>
+          </div>
+          <div>
+            <p className="text-xs text-zinc-400 mb-1">{t('fields.email')}</p>
+            <p className="text-sm font-medium text-zinc-900">{customer.email || '—'}</p>
+          </div>
+          <div className="md:col-span-2">
+            <p className="text-xs text-zinc-400 mb-1">{t('fields.address')}</p>
+            <p className="text-sm font-medium text-zinc-900">{customer.address || '—'}</p>
+          </div>
+          <div className="md:col-span-2">
+            <p className="text-xs text-zinc-400 mb-1">{t('fields.notes')}</p>
+            <p className="text-sm text-zinc-700 whitespace-pre-wrap">{customer.notes || '—'}</p>
+          </div>
+        </div>
+      ) : (
+        <CustomerOrders customerId={customer.id} />
+      )}
 
       {/* Delete dialog */}
       <CustomerDeleteDialog

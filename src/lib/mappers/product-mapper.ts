@@ -46,7 +46,7 @@ export function toCreateProductRequest(
 export function toUpdateProductRequest(
   data: EditProductFormData,
 ): UpdateProductRequest {
-  const result: Record<string, unknown> = {}
+  const result: UpdateProductRequest = {}
 
   if (data.name !== undefined && data.name !== '') {
     result.name = data.name
@@ -79,7 +79,7 @@ export function toUpdateProductRequest(
     result.barcode = emptyToNull(data.barcode)
   }
 
-  return result as UpdateProductRequest
+  return result
 }
 
 /** Helper: empty string → null, non-empty → string */

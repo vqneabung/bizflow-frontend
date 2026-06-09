@@ -112,3 +112,46 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 }
+
+/* === Print styles (FR-09: Print Invoice) === */
+@media print {
+  /* Ẩn sidebar, header, navigation, buttons */
+  aside,
+  header,
+  nav,
+  button {
+    display: none !important;
+  }
+
+  /* Reset layout margins */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Ẩn mọi thứ ngoài .print-area */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Hiện lại .print-area và các con của nó */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Đặt .print-area ở góc trên trái, full width */
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Reset màu nền để tiết kiệm mực */
+  body {
+    background: white !important;
+  }
+}

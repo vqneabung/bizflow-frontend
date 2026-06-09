@@ -48,3 +48,18 @@ export async function updateCustomer(id: string, data: UpdateCustomerRequest): P
 export async function deactivateCustomer(id: string): Promise<ApiResponse<void>> {
   return api.patch(`customers/${id}/deactivate`).json<ApiResponse<void>>()
 }
+
+/** Lịch sử mua hàng của 1 khách hàng (FR-17) */
+export async function getCustomerOrders(
+  id: string,
+  params: { page?: number; size?: number } = {},
+): Promise<PaginationResponse<import('@/lib/types').OrderSummary>> {
+  const searchParams = new URLSearchParams()
+  if (params.page) searchParams.set('page', String(params.page))
+  if (params.size) searchParams.set('size', String(params.size))
+
+  const query = searchParams.toString()
+  return api
+    .get(`customers/${id}/orders${query ? '?' + query : ''}`)
+    .json<PaginationResponse<import('@/lib/types').OrderSummary>>()
+}

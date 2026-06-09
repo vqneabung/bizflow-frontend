@@ -7,6 +7,8 @@
 
 import Combobox from '@/components/ui/combobox'
 import { useCategoriesQuery, useFindOrCreateCategoryMutation } from '@/lib/query/reference'
+import { toast } from 'sonner'
+import { useTranslations } from 'next-intl'
 
 interface CategorySelectProps {
   value: string
@@ -23,13 +25,14 @@ export default function CategorySelect({
 }: CategorySelectProps) {
   const { data: items = [], isPending } = useCategoriesQuery()
   const createCategoryMutation = useFindOrCreateCategoryMutation()
+  const t = useTranslations('common')
 
   const handleAddNew = async (name: string) => {
     try {
       const res = await createCategoryMutation.mutateAsync({ name })
       if (res.data) onChange(res.data.id)
-    } catch (err) {
-      console.error('Failed to create category:', err)
+    } catch {
+      toast.error(t('errors.createCategory'))
     }
   }
 

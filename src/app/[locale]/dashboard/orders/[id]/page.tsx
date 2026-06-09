@@ -6,9 +6,11 @@ import { Link } from '@/i18n/navigation'
 import { useRouter } from '@/i18n/navigation'
 import { notFound } from 'next/navigation'
 import { toast } from 'sonner'
+import { Printer } from 'lucide-react'
 import { useOrderQuery, useCancelOrderMutation } from '@/lib/query/orders'
 import { OrderDetailSkeleton } from '@/components/orders/OrderSkeleton'
 import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge'
+import OrderPrintView from '@/components/orders/OrderPrintView'
 import { getErrorMessage } from '@/lib/types'
 import { useState } from 'react'
 
@@ -130,6 +132,13 @@ export default function OrderDetailPage() {
             {cancelling ? t('actions.cancelling') : t('actions.cancel')}
           </button>
         )}
+        <button
+          onClick={() => window.print()}
+          className="px-4 py-2 rounded-xl border border-zinc-300 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors flex items-center gap-2"
+        >
+          <Printer className="h-4 w-4" />
+          {t('actions.print')}
+        </button>
       </div>
 
       {/* Info card */}
@@ -195,6 +204,11 @@ export default function OrderDetailPage() {
             </tfoot>
           </table>
         </div>
+      </div>
+
+      {/* Print view — chỉ hiện khi in (CSS @media print ẩn phần còn lại) */}
+      <div className="hidden print:block">
+        <OrderPrintView order={item} />
       </div>
     </div>
   )
