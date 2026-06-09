@@ -531,7 +531,15 @@
       "title": "Tồn kho",
       "totalProducts": "Tổng SP",
       "totalValue": "Giá trị tồn",
-      "lowStock": "Hàng sắp hết"
+      "lowStock": "Hàng sắp hết",
+      "productsBelowMin": "Sản phẩm dưới tồn tối thiểu",
+      "product": "Sản phẩm",
+      "stock": "Tồn kho",
+      "minStock": "Tồn tối thiểu",
+      "productsByCategory": "Sản phẩm theo danh mục",
+      "category": "Danh mục",
+      "count": "Số lượng",
+      "percent": "%"
     },
     "debt": {
       "title": "Công nợ",
@@ -539,6 +547,18 @@
       "customer": "Khách hàng",
       "orders": "Đơn",
       "amount": "Số nợ"
+    },
+    "tabs": {
+      "overview": "Tổng quan",
+      "revenue": "Doanh thu",
+      "best-selling": "Bán chạy",
+      "inventory": "Tồn kho",
+      "debt": "Công nợ"
+    },
+    "ranges": {
+      "7d": "7 ngày",
+      "30d": "30 ngày",
+      "thisMonth": "Tháng này"
     }
   },
   "nav": {

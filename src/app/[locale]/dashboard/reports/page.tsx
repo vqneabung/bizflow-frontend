@@ -18,19 +18,9 @@ import { useState } from 'react'
 
 type Tab = 'overview' | 'revenue' | 'best-selling' | 'inventory' | 'debt'
 
-const tabs: { key: Tab; label: string }[] = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'revenue', label: 'Revenue' },
-  { key: 'best-selling', label: 'Best Selling' },
-  { key: 'inventory', label: 'Inventory' },
-  { key: 'debt', label: 'Debt' },
-]
+const tabs: Tab[] = ['overview', 'revenue', 'best-selling', 'inventory', 'debt']
 
-const revenueRanges = [
-  { key: '7d', label: '7 Days' },
-  { key: '30d', label: '30 Days' },
-  { key: 'thisMonth', label: 'This Month' },
-] as const
+const revenueRanges = ['7d', '30d', 'thisMonth'] as const
 
 export default function ReportsPage() {
   const t = useTranslations('reports')
@@ -96,15 +86,15 @@ export default function ReportsPage() {
       <div className="flex flex-wrap gap-1 border-b border-zinc-200">
         {tabs.map((tab) => (
           <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            key={tab}
+            onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
-              activeTab === tab.key
+              activeTab === tab
                 ? 'border-b-2 border-blue-500 text-blue-600'
                 : 'text-zinc-500 hover:text-zinc-700'
             }`}
           >
-            {tab.label}
+            {t('tabs.' + tab)}
           </button>
         ))}
       </div>
@@ -141,15 +131,15 @@ export default function ReportsPage() {
             <div className="flex gap-2">
               {revenueRanges.map((r) => (
                 <button
-                  key={r.key}
-                  onClick={() => setRevenueRange(r.key)}
+                  key={r}
+                  onClick={() => setRevenueRange(r)}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                    revenueRange === r.key
+                    revenueRange === r
                       ? 'bg-blue-100 text-blue-700'
                       : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
                   }`}
                 >
-                  {r.label}
+                  {t('ranges.' + r)}
                 </button>
               ))}
             </div>

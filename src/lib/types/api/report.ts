@@ -40,7 +40,7 @@ export interface LowStockProduct {
 
 export interface CategoryDistribution {
   categoryName: string
-  productCount: number
+  count: number
 }
 
 export interface InventoryReport {

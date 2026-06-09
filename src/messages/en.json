@@ -531,7 +531,15 @@
       "title": "Inventory",
       "totalProducts": "Total Products",
       "totalValue": "Inventory Value",
-      "lowStock": "Low Stock Items"
+      "lowStock": "Low Stock Items",
+      "productsBelowMin": "Products Below Minimum Stock",
+      "product": "Product",
+      "stock": "Stock",
+      "minStock": "Min Stock",
+      "productsByCategory": "Products by Category",
+      "category": "Category",
+      "count": "Count",
+      "percent": "%"
     },
     "debt": {
       "title": "Debt",
@@ -539,6 +547,18 @@
       "customer": "Customer",
       "orders": "Orders",
       "amount": "Amount"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "revenue": "Revenue",
+      "best-selling": "Best Selling",
+      "inventory": "Inventory",
+      "debt": "Debt"
+    },
+    "ranges": {
+      "7d": "7 Days",
+      "30d": "30 Days",
+      "thisMonth": "This Month"
     }
   },
   "nav": {
