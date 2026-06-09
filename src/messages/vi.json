@@ -151,12 +151,22 @@
       "stock": "Sản phẩm tồn kho",
       "comparedToYesterday": "so với hôm qua"
     },
-    "chart": {
-      "title": "Biểu đồ doanh thu",
-      "description": "Biểu đồ sẽ hiển thị tại đây sau khi kết nối API.",
-      "placeholder": "📈 Biểu đồ doanh thu 7 ngày gần nhất"
-    },
-    "version": "Bizflow v0.1.0"
+      "chart": {
+        "title": "Biểu đồ doanh thu",
+        "description": "Biểu đồ sẽ hiển thị tại đây sau khi kết nối API.",
+        "placeholder": "?? Biểu đồ doanh thu 7 ngày gần nhất",
+        "viewAll": "Xem tất cả"
+      },
+      "actions": {
+        "createOrder": "Tạo đơn hàng",
+        "createProduct": "Thêm sản phẩm",
+        "stockImport": "Nhập kho"
+      },
+      "greeting": "Xin chào, {name}",
+      "errors": {
+        "overviewFailed": "Không thể tải dữ liệu tổng quan"
+      },
+      "version": "Bizflow v0.1.0"
   },
 
   "profile": {

@@ -151,12 +151,22 @@
       "stock": "Stock Items",
       "comparedToYesterday": "vs yesterday"
     },
-    "chart": {
-      "title": "Revenue Chart",
-      "description": "Chart will be displayed here after API connection.",
-      "placeholder": "📈 Last 7 days revenue chart"
-    },
-    "version": "Bizflow v0.1.0"
+      "chart": {
+        "title": "Revenue Chart",
+        "description": "Chart will be displayed here after API connection.",
+        "placeholder": "?? Last 7 days revenue chart",
+        "viewAll": "View All"
+      },
+      "actions": {
+        "createOrder": "Create Order",
+        "createProduct": "Add Product",
+        "stockImport": "Stock Import"
+      },
+      "greeting": "Hello, {name}",
+      "errors": {
+        "overviewFailed": "Failed to load overview data"
+      },
+      "version": "Bizflow v0.1.0"
   },
 
   "profile": {
