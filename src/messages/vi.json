@@ -2,7 +2,13 @@
   "common": {
     "siteName": "Bizflow",
     "siteDescription": "Nền tảng hỗ trợ chuyển đổi số cho hộ kinh doanh",
-    "nav": {
+  "error": {
+    "title": "Đã xảy ra lỗi",
+    "message": "Xin lỗi, đã có sự cố. Vui lòng thử lại.",
+    "tryAgain": "Thử lại"
+  },
+
+  "nav": {
       "home": "Trang chủ",
       "about": "Giới thiệu",
       "contact": "Liên hệ"
@@ -569,5 +575,11 @@
     "stockImports": "Nhập kho",
     "orders": "Đơn hàng",
     "reports": "Báo cáo"
+  },
+  "notFound": {
+    "title": "Không tìm thấy trang",
+    "message": "Đường dẫn bạn truy cập không tồn tại hoặc đã bị xóa.",
+    "backToHome": "Về trang chủ",
+    "backToDashboard": "Mở dashboard"
   }
 }

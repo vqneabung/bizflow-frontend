@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { ReportStatCard } from '@/components/reports/ReportStatCard'
 import { RevenueChart } from '@/components/reports/RevenueChart'
+import { DashboardSkeleton } from '@/components/reports/DashboardSkeleton'
 import { useOverviewQuery, useRevenueQuery } from '@/lib/query/reports'
 import { Link } from '@/i18n/navigation'
 
@@ -26,6 +27,8 @@ export function DashboardHome({ userName, userEmail }: DashboardHomeProps) {
     return new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit' }).format(date)
   }
 
+  if (isPending) return <DashboardSkeleton />
+
   return (
     <div className="space-y-6">
       {/* User greeting */}
@@ -37,11 +40,7 @@ export function DashboardHome({ userName, userEmail }: DashboardHomeProps) {
       </div>
 
       {/* Stat cards */}
-      {isPending ? (
-        <div className="flex items-center justify-center rounded-xl border border-dashed border-zinc-200 p-8 text-sm text-zinc-400">
-          {t('chart.placeholder')}
-        </div>
-      ) : isError ? (
+      {isError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
           {t('errors.overviewFailed')}
         </div>

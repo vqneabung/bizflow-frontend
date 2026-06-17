@@ -2,7 +2,13 @@
   "common": {
     "siteName": "Bizflow",
     "siteDescription": "Platform to support digital transformation for household businesses",
-    "nav": {
+  "error": {
+    "title": "Something went wrong",
+    "message": "Sorry, an unexpected error occurred. Please try again.",
+    "tryAgain": "Try again"
+  },
+
+  "nav": {
       "home": "Home",
       "about": "About",
       "contact": "Contact"
@@ -569,5 +575,11 @@
     "stockImports": "Stock Imports",
     "orders": "Orders",
     "reports": "Reports"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "backToHome": "Back to home",
+    "backToDashboard": "Open dashboard"
   }
 }
