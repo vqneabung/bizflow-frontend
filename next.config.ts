@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Tell Turbopack that bizflow-frontend is the actual workspace root.
+  // Otherwise Next.js detects root's pnpm-lock.yaml and gets confused
+  // (especially when Nx is at the monorepo root).
+  turbopack: {
+    root: __dirname,
+  },
 }
 
 export default withNextIntl(nextConfig)

@@ -1,0 +1,48 @@
+{
+  "name": "bizflow-frontend",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "application",
+  "tags": [
+    "scope:web",
+    "lang:typescript",
+    "framework:nextjs"
+  ],
+  "targets": {
+    "build": {
+      "outputs": [
+        "{projectRoot}/.next/**",
+        "!{projectRoot}/.next/cache/**",
+        "{workspaceRoot}/bizflow-frontend/.next/!(cache)/**/*",
+        "{workspaceRoot}/bizflow-frontend/.next/!(cache)"
+      ]
+    },
+    "dev": {
+      "executor": "@nx/next:dev",
+      "options": {}
+    },
+    "start": {
+      "executor": "@nx/next:start",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {}
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "pnpm lint",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "pnpm tsc --noEmit",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}
