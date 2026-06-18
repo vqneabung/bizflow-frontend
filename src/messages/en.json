@@ -194,7 +194,18 @@
       "sms": "SMS Notifications",
       "smsDesc": "Receive debt notifications via SMS"
     },
-    "note": "* Profile editing and password change features will be developed later."
+    "edit": {
+      "title": "Edit Profile",
+      "name": "Display Name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email",
+      "emailNote": "Email cannot be changed.",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saved": "Profile updated successfully",
+      "error": "Failed to update profile",
+      "nameRequired": "Please enter your display name"
+    }
   },
 
   "products": {
@@ -422,6 +433,7 @@
       "quantityRequired": "Quantity must be > 0",
       "unitCostRequired": "Unit cost must be > 0"
     },
+    "search": "Search by reference...",
     "empty": {
       "title": "No stock imports yet",
       "description": "Create your first stock import to record incoming inventory.",
@@ -509,10 +521,13 @@
       "cannotCancel": "Cannot cancel this order",
       "confirmError": "Could not confirm order"
     },
+    "search": "Search by order reference...",
     "empty": {
       "title": "No orders yet",
       "description": "Create your first order to start selling.",
-      "action": "Create order"
+      "action": "Create order",
+      "searchNoResults": "No orders found",
+      "searchNoResultsDescription": "Try adjusting your search term."
     }
   },
 
@@ -575,6 +590,13 @@
     "stockImports": "Stock Imports",
     "orders": "Orders",
     "reports": "Reports"
+  },
+  "verification": {
+    "title": "Verify your email",
+    "message": "Please verify your email address to use all features.",
+    "resend": "Resend verification email",
+    "resending": "Sending...",
+    "dismiss": "Dismiss"
   },
   "notFound": {
     "title": "Page not found",

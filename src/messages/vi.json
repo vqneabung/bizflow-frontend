@@ -194,7 +194,18 @@
       "sms": "Thông báo qua SMS",
       "smsDesc": "Nhận thông báo công nợ qua SMS"
     },
-    "note": "* Các tính năng chỉnh sửa thông tin và đổi mật khẩu sẽ được phát triển sau."
+    "edit": {
+      "title": "Chỉnh sửa thông tin",
+      "name": "Tên hiển thị",
+      "namePlaceholder": "Nhập tên của bạn",
+      "email": "Email",
+      "emailNote": "Email không thể thay đổi.",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu...",
+      "saved": "Cập nhật thông tin thành công",
+      "error": "Không thể cập nhật thông tin",
+      "nameRequired": "Vui lòng nhập tên hiển thị"
+    }
   },
 
   "products": {
@@ -422,6 +433,7 @@
       "quantityRequired": "Số lượng phải > 0",
       "unitCostRequired": "Đơn giá phải > 0"
     },
+    "search": "Tìm kiếm theo mã phiếu nhập...",
     "empty": {
       "title": "Chưa có phiếu nhập nào",
       "description": "Tạo phiếu nhập kho đầu tiên để ghi nhận hàng nhập về.",
@@ -509,10 +521,13 @@
       "cannotCancel": "Không thể hủy đơn hàng này",
       "confirmError": "Không thể xác nhận đơn hàng"
     },
+    "search": "Tìm kiếm theo mã đơn hàng...",
     "empty": {
       "title": "Chưa có đơn hàng nào",
       "description": "Tạo đơn hàng đầu tiên để bắt đầu bán hàng.",
-      "action": "Tạo đơn hàng"
+      "action": "Tạo đơn hàng",
+      "searchNoResults": "Không tìm thấy đơn hàng",
+      "searchNoResultsDescription": "Thử điều chỉnh từ khóa tìm kiếm."
     }
   },
 
@@ -575,6 +590,13 @@
     "stockImports": "Nhập kho",
     "orders": "Đơn hàng",
     "reports": "Báo cáo"
+  },
+  "verification": {
+    "title": "Xác thực email",
+    "message": "Vui lòng xác thực email của bạn để sử dụng đầy đủ tính năng.",
+    "resend": "Gửi lại email xác thực",
+    "resending": "Đang gửi...",
+    "dismiss": "Đóng"
   },
   "notFound": {
     "title": "Không tìm thấy trang",

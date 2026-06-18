@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import SearchBar from '@/components/ui/search-bar'
 import StockImportTable from '@/components/stock-imports/StockImportTable'
 import StockImportEmptyState from '@/components/stock-imports/StockImportEmptyState'
 import { StockImportTableSkeleton } from '@/components/stock-imports/StockImportSkeleton'
@@ -16,6 +17,7 @@ export default function StockImportsPage() {
   const d = useTranslations('dashboard')
 
   const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
 
   const {
     data: result,
@@ -30,6 +32,12 @@ export default function StockImportsPage() {
 
   const items = result?.data ?? []
   const pagination = result?.pagination ?? null
+
+  const filteredItems = search
+    ? items.filter((item) =>
+        item.referenceNumber.toLowerCase().includes(search.toLowerCase())
+      )
+    : items
 
   if (isPending) {
     return (
@@ -92,11 +100,17 @@ export default function StockImportsPage() {
         </Link>
       </div>
 
+      {items.length > 0 && (
+        <SearchBar value={search} onChange={setSearch} placeholder={t('search')} />
+      )}
+
       {items.length === 0 ? (
         <StockImportEmptyState />
+      ) : filteredItems.length === 0 ? (
+        <p className="text-sm text-zinc-500 text-center py-8">Không tìm thấy kết quả phù hợp</p>
       ) : (
         <>
-          <StockImportTable items={items} />
+          <StockImportTable items={filteredItems} />
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (

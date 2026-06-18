@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import SearchBar from '@/components/ui/search-bar'
 import { OrderTable } from '@/components/orders/OrderTable'
 import { OrderEmptyState } from '@/components/orders/OrderEmptyState'
 import { OrderTableSkeleton } from '@/components/orders/OrderSkeleton'
@@ -19,6 +20,7 @@ export default function OrdersPage() {
 
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'ALL'>('ALL')
+  const [localSearch, setLocalSearch] = useState('')
 
   const {
     data: result,
@@ -34,6 +36,12 @@ export default function OrdersPage() {
 
   const items = result?.data ?? []
   const pagination = result?.pagination ?? null
+
+  const filteredItems = localSearch
+    ? items.filter((item) =>
+        item.referenceNumber.toLowerCase().includes(localSearch.toLowerCase())
+      )
+    : items
 
   if (isPending) {
     return (
@@ -116,6 +124,11 @@ export default function OrdersPage() {
         ))}
       </div>
 
+      {/* Search */}
+      {items.length > 0 && (
+        <SearchBar value={localSearch} onChange={setLocalSearch} placeholder={rootT('orders.search')} />
+      )}
+
       {items.length === 0 ? (
         <OrderEmptyState
           title={rootT('orders.empty.title')}
@@ -123,9 +136,16 @@ export default function OrdersPage() {
           actionLabel={rootT('orders.empty.action')}
           actionHref="/dashboard/orders/create"
         />
+      ) : filteredItems.length === 0 ? (
+        <OrderEmptyState
+          title={rootT('orders.empty.searchNoResults')}
+          description={rootT('orders.empty.searchNoResultsDescription')}
+          actionLabel={rootT('orders.empty.action')}
+          actionHref="/dashboard/orders/create"
+        />
       ) : (
         <>
-          <OrderTable orders={items} t={rootT} locale={locale} />
+          <OrderTable orders={filteredItems} t={rootT} locale={locale} />
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (

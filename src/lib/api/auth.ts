@@ -81,6 +81,12 @@ export async function getMe(): Promise<UserInfo> {
   return res.data
 }
 
+export async function updateUser(data: { name?: string }): Promise<UserInfo> {
+  const res = await api.patch('auth/me', { json: data }).json<ApiResponse<UserInfo>>()
+  if (!res.data) throw new Error(res.message)
+  return res.data
+}
+
 export async function logout(): Promise<void> {
   try {
     const res = await api.post('auth/logout').json<ApiResponse<{ redirect: string }>>()

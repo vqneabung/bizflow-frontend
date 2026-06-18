@@ -4,6 +4,7 @@ export interface UserInfo {
   name: string | null
   role: string
   joinedAt: string
+  emailVerifiedAt: string | null
 }
 
 export interface RegisterRequest {
