@@ -176,6 +176,13 @@
       "errors": {
         "overviewFailed": "Không thể tải dữ liệu tổng quan"
       },
+      "lowStockAlerts": {
+        "title": "Sản phẩm sắp hết hàng",
+        "empty": "Không có sản phẩm sắp hết",
+        "viewAll": "Xem tất cả",
+        "error": "Không thể tải dữ liệu",
+        "loading": "Đang tải..."
+      },
       "version": "Bizflow v0.1.0"
   },
 

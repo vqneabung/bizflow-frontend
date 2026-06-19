@@ -5,6 +5,7 @@ import { ReportStatCard } from '@/components/reports/ReportStatCard'
 import { RevenueChart } from '@/components/reports/RevenueChart'
 import { DashboardSkeleton } from '@/components/reports/DashboardSkeleton'
 import { useOverviewQuery, useRevenueQuery } from '@/lib/query/reports'
+import { LowStockAlerts } from '@/components/reports/LowStockAlerts'
 import { Link } from '@/i18n/navigation'
 
 interface DashboardHomeProps {
@@ -114,6 +115,8 @@ export function DashboardHome({ userName, userEmail }: DashboardHomeProps) {
           formatPrice={formatPrice}
         />
       </div>
+
+      <LowStockAlerts />
     </div>
   )
 }

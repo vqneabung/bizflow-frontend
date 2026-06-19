@@ -176,6 +176,13 @@
       "errors": {
         "overviewFailed": "Failed to load overview data"
       },
+      "lowStockAlerts": {
+        "title": "Low Stock Alerts",
+        "empty": "No low stock products",
+        "viewAll": "View all",
+        "error": "Failed to load data",
+        "loading": "Loading..."
+      },
       "version": "Bizflow v0.1.0"
   },
 
