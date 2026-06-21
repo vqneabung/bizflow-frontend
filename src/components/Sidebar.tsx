@@ -3,13 +3,23 @@
 import { useTranslations } from 'next-intl'
 import { Link, usePathname } from '@/i18n/navigation'
 import { navItems } from '@/lib/constants'
+import type { UserRole } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export default function Sidebar() {
+interface SidebarProps {
+  userRole?: UserRole
+}
+
+export default function Sidebar({ userRole }: SidebarProps = {}) {
   const pathname = usePathname()
   const t = useTranslations('nav')
   const d = useTranslations('dashboard')
+
+  const visibleItems = navItems.filter((item) => {
+    if (item.key === 'employees') return userRole === 'USER'
+    return true
+  })
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-zinc-900 text-white">
@@ -19,7 +29,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
+        {visibleItems.map((item) => {
           const isActive = pathname === item.href
           return (
             <Button

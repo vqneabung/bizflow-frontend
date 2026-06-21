@@ -15,4 +15,5 @@ export const navItems = [
   { key: 'stockImports', href: '/dashboard/stock-imports', icon: '📥' },
   { key: 'orders', href: '/dashboard/orders', icon: '🛒' },
   { key: 'reports', href: '/dashboard/reports', icon: '📈' },
+  { key: 'employees', href: '/dashboard/employees', icon: '🧑‍💼' },
 ] as const

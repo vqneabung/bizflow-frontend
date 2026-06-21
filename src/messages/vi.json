@@ -596,7 +596,68 @@
     "customers": "Khách hàng",
     "stockImports": "Nhập kho",
     "orders": "Đơn hàng",
-    "reports": "Báo cáo"
+    "reports": "Báo cáo",
+    "employees": "Nhân viên"
+  },
+  "employees": {
+    "title": "Nhân viên",
+    "description": "Quản lý tài khoản nhân viên",
+    "create": "Tạo nhân viên",
+    "search": "Tìm theo email hoặc tên...",
+    "empty": {
+      "description": "Tạo nhân viên đầu tiên để bắt đầu phân quyền bán hàng."
+    },
+    "table": {
+      "name": "Tên",
+      "email": "Email",
+      "createdAt": "Ngày tạo",
+      "status": "Trạng thái",
+      "actions": "Thao tác",
+      "empty": "Chưa có nhân viên nào"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Đã vô hiệu"
+    },
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "nhanvien@example.com",
+      "name": "Tên hiển thị",
+      "namePlaceholder": "Nguyễn Văn A (không bắt buộc)",
+      "password": "Mật khẩu",
+      "passwordHint": "Tối thiểu 6 ký tự",
+      "newPassword": "Mật khẩu mới",
+      "cancel": "Huỷ",
+      "submit": "Xác nhận",
+      "submitting": "Đang xử lý..."
+    },
+    "validation": {
+      "emailInvalid": "Email không hợp lệ",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự"
+    },
+    "actions": {
+      "resetPassword": "Đặt lại mật khẩu",
+      "deactivate": "Vô hiệu hóa",
+      "confirmDeactivate": "Vô hiệu hóa nhân viên"
+    },
+    "pagination": {
+      "summary": "Hiển thị {from}-{to} / {total}",
+      "prev": "Trước",
+      "next": "Sau"
+    },
+    "messages": {
+      "created": "Đã tạo nhân viên",
+      "createFailed": "Tạo nhân viên thất bại",
+      "deactivated": "Đã vô hiệu hóa nhân viên",
+      "deactivateFailed": "Vô hiệu hóa thất bại",
+      "passwordReset": "Đã đặt lại mật khẩu",
+      "passwordResetFailed": "Đặt lại mật khẩu thất bại"
+    },
+    "errors": {
+      "loadFailed": "Không thể tải danh sách nhân viên",
+      "loadFailedAction": "Thử lại"
+    },
+    "forbidden": "Chỉ chủ cửa hàng mới có thể quản lý nhân viên"
   },
   "verification": {
     "title": "Xác thực email",

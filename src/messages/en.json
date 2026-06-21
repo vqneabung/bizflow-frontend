@@ -596,7 +596,68 @@
     "customers": "Customers",
     "stockImports": "Stock Imports",
     "orders": "Orders",
-    "reports": "Reports"
+    "reports": "Reports",
+    "employees": "Employees"
+  },
+  "employees": {
+    "title": "Employees",
+    "description": "Manage employee accounts",
+    "create": "Create employee",
+    "search": "Search by email or name...",
+    "empty": {
+      "description": "Create your first employee to start delegating sales."
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "createdAt": "Created at",
+      "status": "Status",
+      "actions": "Actions",
+      "empty": "No employees yet"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Deactivated"
+    },
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "employee@example.com",
+      "name": "Display name",
+      "namePlaceholder": "John Doe (optional)",
+      "password": "Password",
+      "passwordHint": "Minimum 6 characters",
+      "newPassword": "New password",
+      "cancel": "Cancel",
+      "submit": "Confirm",
+      "submitting": "Processing..."
+    },
+    "validation": {
+      "emailInvalid": "Invalid email",
+      "passwordMin": "Password must be at least 6 characters"
+    },
+    "actions": {
+      "resetPassword": "Reset password",
+      "deactivate": "Deactivate",
+      "confirmDeactivate": "Deactivate this employee"
+    },
+    "pagination": {
+      "summary": "Showing {from}-{to} / {total}",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "messages": {
+      "created": "Employee created",
+      "createFailed": "Failed to create employee",
+      "deactivated": "Employee deactivated",
+      "deactivateFailed": "Deactivation failed",
+      "passwordReset": "Password reset",
+      "passwordResetFailed": "Password reset failed"
+    },
+    "errors": {
+      "loadFailed": "Failed to load employees",
+      "loadFailedAction": "Retry"
+    },
+    "forbidden": "Only the store owner can manage employees"
   },
   "verification": {
     "title": "Verify your email",

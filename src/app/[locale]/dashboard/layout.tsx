@@ -17,7 +17,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-zinc-50">
-      <Sidebar />
+      <Sidebar userRole={user.role} />
       {/* md:ml-64 offset fixed sidebar (256px) — content không bị sidebar che */}
       <div className="flex-1 md:ml-64 flex flex-col overflow-hidden">
         <Header user={user} />

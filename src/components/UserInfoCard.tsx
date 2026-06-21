@@ -1,13 +1,13 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import type { UserInfo } from '@/lib/types'
+import type { UserInfo, UserRole } from '@/lib/types'
 import { Card, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
-const roleVariant: Record<string, 'default' | 'secondary' | 'warning' | 'info'> = {
-  OWNER: 'default',
+const roleVariant: Record<UserRole, 'default' | 'secondary' | 'warning' | 'info'> = {
+  USER: 'default',
   EMPLOYEE: 'info',
   ADMIN: 'warning',
 }
@@ -18,7 +18,7 @@ export default function UserInfoCard({ user }: { user: UserInfo }) {
   const displayName = user.name ?? user.email
   const initial = displayName.charAt(0).toUpperCase()
 
-  const roleKey = user.role === 'OWNER' ? 'owner' : user.role === 'EMPLOYEE' ? 'employee' : 'admin'
+  const roleKey = user.role === 'USER' ? 'owner' : user.role === 'EMPLOYEE' ? 'employee' : 'admin'
   const variant = roleVariant[user.role] ?? 'secondary'
 
   return (
