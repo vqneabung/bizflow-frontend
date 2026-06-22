@@ -15,6 +15,7 @@ import type {
   UpdateProductRequest,
   ApiResponse,
   ListProductsParams,
+  InventoryHistoryResponse,
 } from '@/lib/types'
 
 /**
@@ -53,4 +54,19 @@ export async function updateProduct(id: string, data: UpdateProductRequest): Pro
 /** Ẩn sản phẩm (soft delete). */
 export async function deactivateProduct(id: string): Promise<ApiResponse<void>> {
   return api.patch(`products/${id}/deactivate`).json<ApiResponse<void>>()
+}
+
+/** Lịch sử biến động tồn kho của 1 sản phẩm (phân trang). */
+export async function getInventoryHistory(
+  id: string,
+  params: { page?: number; size?: number } = {},
+): Promise<PaginationResponse<InventoryHistoryResponse>> {
+  const searchParams = new URLSearchParams()
+  if (params.page) searchParams.set('page', String(params.page))
+  if (params.size) searchParams.set('size', String(params.size))
+
+  const query = searchParams.toString()
+  return api
+    .get(`products/${id}/inventory-history${query ? '?' + query : ''}`)
+    .json<PaginationResponse<InventoryHistoryResponse>>()
 }

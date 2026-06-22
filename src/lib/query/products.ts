@@ -19,6 +19,7 @@ import {
   createProduct,
   updateProduct,
   deactivateProduct,
+  getInventoryHistory,
 } from '@/lib/api/products'
 import type {
   ListProductsParams,
@@ -27,6 +28,7 @@ import type {
   CreateProductRequest,
   UpdateProductRequest,
   ApiResponse,
+  InventoryHistoryResponse,
 } from '@/lib/types'
 
 // ===== Query key factory =====
@@ -37,6 +39,9 @@ export const productKeys = {
   list: (params: ListProductsParams) => [...productKeys.lists(), params] as const,
   details: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
+  histories: () => [...productKeys.all, 'inventory-history'] as const,
+  history: (id: string, page: number, size: number) =>
+    [...productKeys.histories(), id, page, size] as const,
 }
 
 // ===== Query hooks =====
@@ -68,6 +73,24 @@ export function useProductQuery(
     queryKey: productKeys.detail(id),
     queryFn: () => getProduct(id),
     enabled: !!id,
+    ...options,
+  })
+}
+
+/** Hook: lịch sử biến động tồn kho của 1 product (phân trang) */
+export function useInventoryHistoryQuery(
+  productId: string,
+  page = 1,
+  size = 20,
+  options?: Omit<
+    UseQueryOptions<PaginationResponse<InventoryHistoryResponse>>,
+    'queryKey' | 'queryFn' | 'enabled'
+  >,
+) {
+  return useQuery({
+    queryKey: productKeys.history(productId, page, size),
+    queryFn: () => getInventoryHistory(productId, { page, size }),
+    enabled: !!productId,
     ...options,
   })
 }

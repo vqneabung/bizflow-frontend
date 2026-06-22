@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import ProductDeleteDialog from '@/components/products/ProductDeleteDialog'
 import { ProductDetailSkeleton } from '@/components/products/ProductSkeleton'
+import { ProductInventoryHistory } from '@/components/products/ProductInventoryHistory'
 import { useImageUrl } from '@/lib/hooks/use-image-url'
 import {
   useProductQuery,
@@ -160,6 +161,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           </button>
         )}
       </div>
+
+      {/* Inventory history */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">{t('history.title')}</h2>
+        <ProductInventoryHistory productId={product.id} />
+      </section>
 
       <ProductDeleteDialog
         isOpen={showDelete}

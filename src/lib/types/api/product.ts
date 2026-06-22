@@ -52,3 +52,18 @@ export interface ListProductsParams {
   sortBy?: string
   sortDir?: 'asc' | 'desc'
 }
+
+export type InventoryMovementType = 'IN' | 'OUT' | 'RETURN'
+export type InventoryRefType = 'STOCK_IMPORT' | 'ORDER'
+
+export interface InventoryHistoryResponse {
+  id: string
+  productId: string
+  movementType: InventoryMovementType
+  quantity: number
+  balanceAfter: number
+  refType: InventoryRefType
+  refId: string
+  referenceNumber: string | null
+  createdAt: string
+}

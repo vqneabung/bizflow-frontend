@@ -307,6 +307,27 @@
     "unsaved": {
       "title": "You have unsaved changes",
       "message": "Your entered data will be lost if you leave this page."
+    },
+
+    "history": {
+      "title": "Inventory History",
+      "loading": "Loading...",
+      "error": "Failed to load inventory history",
+      "empty": "No inventory changes yet",
+      "time": "Time",
+      "type": "Type",
+      "quantity": "Quantity",
+      "balanceAfter": "Balance After",
+      "reference": "Reference",
+      "movement": {
+        "in": "Stock In",
+        "out": "Stock Out",
+        "return": "Return"
+      },
+      "ref": {
+        "stock.import": "Stock Import",
+        "order": "Order"
+      }
     }
   },
 

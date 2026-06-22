@@ -2,7 +2,15 @@
 export type { UserRole, UserInfo, RegisterRequest } from './api/user'
 export type { Employee, CreateEmployeeInput, ResetPasswordInput, EmployeeListParams } from './api/employee'
 export type { ApiResponse, PaginationMeta, PaginationResponse } from './api/common'
-export type { ProductResponse, CreateProductRequest, UpdateProductRequest, ListProductsParams } from './api/product'
+export type {
+  ProductResponse,
+  CreateProductRequest,
+  UpdateProductRequest,
+  ListProductsParams,
+  InventoryHistoryResponse,
+  InventoryMovementType,
+  InventoryRefType,
+} from './api/product'
 export type { CustomerResponse, CreateCustomerRequest, UpdateCustomerRequest, ListCustomersParams } from './api/customer'
 export type { UnitResponse, CategoryResponse, CategoryOption } from './api/reference'
 export type {

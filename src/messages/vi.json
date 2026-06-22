@@ -307,6 +307,27 @@
     "unsaved": {
       "title": "Bạn có thay đổi chưa lưu",
       "message": "Dữ liệu bạn nhập sẽ bị mất nếu rời trang này."
+    },
+
+    "history": {
+      "title": "Lịch sử tồn kho",
+      "loading": "Đang tải...",
+      "error": "Không thể tải lịch sử tồn kho",
+      "empty": "Chưa có lịch sử thay đổi tồn kho",
+      "time": "Thời gian",
+      "type": "Loại",
+      "quantity": "Số lượng",
+      "balanceAfter": "Tồn sau",
+      "reference": "Tham chiếu",
+      "movement": {
+        "in": "Nhập kho",
+        "out": "Bán ra",
+        "return": "Hoàn trả"
+      },
+      "ref": {
+        "stock.import": "Phiếu nhập",
+        "order": "Đơn hàng"
+      }
     }
   },
 
